@@ -27,7 +27,7 @@ spec:
             [OUTPUT]
                 Name opensearch
                 Match *
-                Host opensearch-master-data
+                Host phoenix-opensearch-master-data
                 Port 9200
                 Index fluentbit
                 Type fluentbit
