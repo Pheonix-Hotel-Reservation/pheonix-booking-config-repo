@@ -5,3 +5,5 @@ resources:
   - istio-base/
   - istio-gateway/
   - secrets-vault/
+  - prometheus-grafana/
+  - logging-opensearch/

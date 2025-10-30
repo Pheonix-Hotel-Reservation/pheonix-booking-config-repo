@@ -1,0 +1,6 @@
+# 01-platform/logging-opensearch/kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - opensearch-app.yaml
+  - fluent-bit-app.yaml

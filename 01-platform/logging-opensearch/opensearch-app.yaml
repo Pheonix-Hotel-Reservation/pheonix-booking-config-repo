@@ -1,0 +1,58 @@
+# 01-platform/logging-opensearch/opensearch-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: opensearch-stack
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  annotations:
+    # ⚠️ Sync Wave 7: Runs after Prometheus/Grafana (Sync Wave 6).
+    argocd.argoproj.io/sync-wave: "7" 
+spec:
+  project: default
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: logging # Dedicated namespace
+  source:
+    # Using the official OpenSearch chart repository
+    repoURL: https://opensearch-project.github.io/helm-charts/
+    targetRevision: 2.21.0 # 🚨 ACTION: Use a stable chart version
+    chart: opensearch
+    helm:
+      values: |
+        # Core OpenSearch Node Configuration
+        clusterName: phoenix-opensearch
+        nodeGroup: master-data
+        replicas: 1 # Single replica for PoC
+        minimumMasterNodes: 1
+        
+        # Disable persistent volumes for Minikube PoC
+        persistence:
+          enabled: false
+
+        # Configure resources for Minikube environment
+        resources:
+          requests:
+            cpu: 500m
+            memory: 1Gi
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+            
+        # OpenSearch Dashboards (UI) Configuration
+        dashboards:
+          enabled: true
+          replicaCount: 1
+          # Dashboards ingress for external access
+          ingress:
+            enabled: true
+            hosts:
+              - opensearch-dashboards.phoenix.local
+            
+        # Set a default user for Dashboards (admin:admin for PoC)
+        # In a real environment, this secret would be managed by Vault
+        config:
+          opensearch_yml: |
+            plugins.security.allow_default_init_securityindex: true
+            plugins.security.disabled: false
