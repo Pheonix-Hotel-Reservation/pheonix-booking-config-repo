@@ -9,14 +9,13 @@ metadata:
     argocd.argoproj.io/sync-wave: "5" 
     argocd.argoproj.io/hook-delete-policy: HookSucceeded 
 spec:
-  template:
-    selector:
+  selector:
     matchLabels:
-      job-name: vault-bootstrap-config  # <- Unique label for job selector
+      job-name: vault-bootstrap-config
   template:
     metadata:
       labels:
-        job-name: vault-bootstrap-config  # <- Matching label for the pod
+        job-name: vault-bootstrap-config
     spec:
       serviceAccountName: vault-bootstrap-sa
       restartPolicy: OnFailure
