@@ -39,7 +39,7 @@ spec:
         injector:
           enabled: true
           image:
-            tag: "1.15.0" # Match server version
+            tag: "1.7.0" # Match server version
   syncPolicy:
     automated:
       prune: true
