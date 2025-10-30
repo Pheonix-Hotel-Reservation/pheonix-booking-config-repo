@@ -1,0 +1,6 @@
+# 01-platform/secrets-vault/vault-bootstrap-sa.yaml
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: vault-bootstrap-sa
+  namespace: vault

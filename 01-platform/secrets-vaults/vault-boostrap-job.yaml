@@ -1,0 +1,65 @@
+# 01-platform/secrets-vault/vault-bootstrap-job.yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: vault-config-bootstrap
+  namespace: vault
+  annotations:
+    # ⚠️ Sync Wave 5: Runs only after Vault Server (Sync Wave 4) is ready.
+    argocd.argoproj.io/sync-wave: "5" 
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded 
+spec:
+  template:
+    spec:
+      serviceAccountName: vault-bootstrap-sa
+      restartPolicy: OnFailure
+      containers:
+      - name: vault-bootstrap
+        image: hashicorp/vault:latest
+        env:
+        - name: VAULT_ADDR
+          value: "http://vault.vault:8200" 
+        - name: ROOT_TOKEN
+          value: "dev-vault-root-token-poc-2025" # 🚨 ACTION: PoC Token
+        command: ["/bin/sh", "-c"]
+        args:
+          - |
+            # Wait for Vault to be ready
+            until nc -z -w 2 vault.vault 8200; do echo 'Waiting for Vault...'; sleep 2; done
+
+            # 1. Login and Enable Engines
+            vault login $ROOT_TOKEN
+            vault secrets enable -version=2 kv/
+            
+            # 2. Enable Kubernetes Auth Method
+            vault auth enable kubernetes
+            vault write auth/kubernetes/config \
+              token_reviewer_jwt="$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)" \
+              kubernetes_host="https://kubernetes.default.svc:443" \
+              disable_iss_validation=true # Simplifies PoC
+              
+            # 3. Create Base Read Policy
+            vault policy write phoenix-read-config - <<EOF
+            path "kv/data/*/*" { capabilities = ["read"] }
+            EOF
+
+            # 4. Create Service-Specific Roles (Binds ServiceAccount to Policy)
+            # These SA names are defined in 02-environments/base/
+            
+            vault write auth/kubernetes/role/user-service-role \
+              bound_service_account_names=user-service-sa \
+              bound_service_account_namespaces=staging,production \
+              policies=phoenix-read-config \
+              ttl=24h
+              
+            vault write auth/kubernetes/role/reservation-service-role \
+              bound_service_account_names=reservation-service-sa \
+              bound_service_account_namespaces=staging,production \
+              policies=phoenix-read-config \
+              ttl=24h
+
+            vault write auth/kubernetes/role/notification-service-role \
+              bound_service_account_names=notification-service-sa \
+              bound_service_account_namespaces=staging,production \
+              policies=phoenix-read-config \
+              ttl=24h
