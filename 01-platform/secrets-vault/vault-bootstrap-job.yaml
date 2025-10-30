@@ -18,14 +18,14 @@ spec:
         image: hashicorp/vault:latest
         env:
         - name: VAULT_ADDR
-          value: "http://vault.vault:8200" 
+          value: "http://hashicorp-vault.vault:8200" 
         - name: ROOT_TOKEN
           value: "dev-vault-root-token-poc-2025" # 🚨 ACTION: PoC Token
         command: ["/bin/sh", "-c"]
         args:
           - |
             # Wait for Vault to be ready
-            until nc -z -w 2 vault.vault 8200; do echo 'Waiting for Vault...'; sleep 2; done
+            until nc -z -w 2 hashicorp-vault.vault 8200; do echo 'Waiting for Vault...'; sleep 2; done
 
             # 1. Login and Enable Engines
             vault login $ROOT_TOKEN
