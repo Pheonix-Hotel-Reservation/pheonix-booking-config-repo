@@ -56,3 +56,10 @@ spec:
           opensearch_yml: |
             plugins.security.allow_default_init_securityindex: true
             plugins.security.disabled: false
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
