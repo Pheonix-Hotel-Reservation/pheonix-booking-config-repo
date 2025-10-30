@@ -36,7 +36,7 @@ spec:
                 # Fluent Bit needs to send the basic auth credentials for OpenSearch's security plugin
                 HTTP_User admin
                 HTTP_Passwd admin
-                tls On
+                tls Off 
                 tls.verify Off # CRITICAL: Disable TLS verification for PoC self-signed certificates
         
         # General configurations
