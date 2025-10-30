@@ -44,6 +44,8 @@ spec:
             enabled: true
             hosts:
               - grafana.phoenix.local
+          annotations:
+              kubernetes.io/ingress.class: istio
             
         # Disable Alertmanager to reduce PoC complexity
         alertmanager:
