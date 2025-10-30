@@ -39,14 +39,14 @@ spec:
           limits:
             cpu: 1000m
             memory: 2Gi
-        cluster:
-          env:
-            - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: opensearch-admin-secret # <-- Secret must exist in 'logging' namespace
-                  key: password                  # <-- Key name inside the secret
-            
+           
+        extraEnvs: # <--- USE THIS PATH
+          - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: opensearch-admin-secret
+                key: password
+        
         # OpenSearch Dashboards (UI) Configuration
         dashboards:
           enabled: true
