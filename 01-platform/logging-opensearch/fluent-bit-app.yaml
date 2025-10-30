@@ -17,7 +17,7 @@ spec:
   source:
     # Using the official Fluent Bit chart repository
     repoURL: https://fluent.github.io/helm-charts
-    targetRevision: 0.50.1 # 🚨 ACTION: Use a stable chart version
+    targetRevision: 0.53.0 # 🚨 ACTION: Use a stable chart version
     chart: fluent-bit
     helm:
       values: |
