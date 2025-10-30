@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
   - istio-base-app.yaml
   - istiod-app.yaml
-  - istiod-values.yaml
