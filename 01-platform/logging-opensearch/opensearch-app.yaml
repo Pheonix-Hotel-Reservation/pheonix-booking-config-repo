@@ -39,6 +39,13 @@ spec:
           limits:
             cpu: 1000m
             memory: 2Gi
+        cluster:
+          env:
+            - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: opensearch-admin-secret # <-- Secret must exist in 'logging' namespace
+                  key: password                  # <-- Key name inside the secret
             
         # OpenSearch Dashboards (UI) Configuration
         dashboards:
@@ -49,6 +56,9 @@ spec:
             enabled: true
             hosts:
               - opensearch-dashboards.phoenix.local
+            annotations:
+              kubernetes.io/ingress.class: istio
+            ingressClassName: istio
             
         # Set a default user for Dashboards (admin:admin for PoC)
         # In a real environment, this secret would be managed by Vault
