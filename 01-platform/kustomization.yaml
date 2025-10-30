@@ -4,4 +4,4 @@ kind: Kustomization
 resources:
   - istio-base/
   - istio-gateway/
-  - secrets-vaults/
+  - secrets-vault/
