@@ -10,6 +10,13 @@ metadata:
     argocd.argoproj.io/hook-delete-policy: HookSucceeded 
 spec:
   template:
+    selector:
+    matchLabels:
+      job-name: vault-bootstrap-config  # <- Unique label for job selector
+  template:
+    metadata:
+      labels:
+        job-name: vault-bootstrap-config  # <- Matching label for the pod
     spec:
       serviceAccountName: vault-bootstrap-sa
       restartPolicy: OnFailure
