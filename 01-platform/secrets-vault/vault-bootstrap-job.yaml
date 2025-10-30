@@ -12,7 +12,7 @@ spec:
   template:
     metadata:
       labels:
-        job-name: vault-config-boostrap
+        job-name: vault-config-bootstrap
     spec:
       serviceAccountName: vault-bootstrap-sa
       restartPolicy: OnFailure
