@@ -9,9 +9,6 @@ metadata:
     argocd.argoproj.io/sync-wave: "5" 
     argocd.argoproj.io/hook-delete-policy: HookSucceeded 
 spec:
-  selector:
-    matchLabels:
-      job-name: vault-bootstrap-config
   template:
     metadata:
       labels:
