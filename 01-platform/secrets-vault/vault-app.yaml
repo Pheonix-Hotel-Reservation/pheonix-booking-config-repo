@@ -16,7 +16,7 @@ spec:
     namespace: vault # Dedicated namespace for Vault
   source:
     repoURL: https://helm.releases.hashicorp.com  
-    targetRevision: 1.15.0 # 🚨 ACTION: Specify a stable Vault version
+    targetRevision: 0.27.0 # 🚨 ACTION: Specify a stable Vault version
     chart: vault
     helm:
       # 🔑 INLINE VALUES: Embedding all configurations directly
