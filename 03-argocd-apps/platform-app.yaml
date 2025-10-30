@@ -9,7 +9,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:Pheonix-Hotel-Reservation/phoenix-booking-config-repo-03-argocd-apps.git 
+    repoURL: https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git
     targetRevision: main  # Tracks the main branch for platform stability
     path: 01-platform/       # Targets all cluster tools
     directory:

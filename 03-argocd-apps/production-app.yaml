@@ -10,7 +10,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:Pheonix-Hotel-Reservation/phoenix-booking-config-repo-03-argocd-apps.git 
+    repoURL: https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git 
     targetRevision: dev # Or 'develop' branch for continuous integration
     path: 02-environments/staging/ # Targets the Staging Kustomize overlay
     directory:
