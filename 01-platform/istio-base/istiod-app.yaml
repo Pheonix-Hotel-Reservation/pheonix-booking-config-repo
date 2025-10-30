@@ -15,11 +15,28 @@ spec:
   source:
     repoURL: https://istio-release.storage.googleapis.com/charts
     targetRevision: 1.27.0 # 🚨 ACTION: Must match Istio Base version (1.27.0)
-    chart: istiod         
+    chart: istiod
     helm:
-      # ArgoCD mounts the Kustomization directory, allowing access to the local values file
-      valueFiles:
-        - istiod-values.yaml
+      # Custom values for the Istiod Helm Chart (inline to avoid multi-source complexity)
+      values: |
+        global:
+          # Sets the default Istio revision for automatic sidecar injection
+          defaultRevision: default
+          # Set desired resource limits for stability
+          resource:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 200m
+              memory: 256Mi
+
+        meshConfig:
+          # Policy to enforce STRICT mTLS mesh-wide by default (Zero-Trust foundation)
+          defaultConfig:
+            # Disable Istio Proxy debug logging to reduce noise
+            proxyMetadata:
+              ISTIO_META_ISTIO_PROXY_DEFAULT_LOG_LEVEL: "warn"
   
   syncPolicy:
     automated:
