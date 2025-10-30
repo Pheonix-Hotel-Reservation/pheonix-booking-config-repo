@@ -47,6 +47,10 @@ spec:
             ingressClassName: istio
             annotations:
               kubernetes.io/ingress.class: istio
+            readinessProbe:
+              initialDelaySeconds: 60
+              timeoutSeconds: 5
+              successThreshold: 1
             
         # Disable Alertmanager to reduce PoC complexity
         alertmanager:
