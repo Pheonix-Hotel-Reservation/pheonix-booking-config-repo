@@ -23,7 +23,7 @@ spec:
         - name: VAULT_ADDR
           value: "http://hashicorp-vault.vault:8200" 
         - name: ROOT_TOKEN
-          value: "dev-vault-root-token-poc-2025" # 🚨 ACTION: PoC Token
+          value: "hvs.neW0GSmrED8GXOhHI5dgoq8t" # 🚨 ACTION: PoC Token
         command: ["/bin/sh", "-c"]
         args:
           - |
