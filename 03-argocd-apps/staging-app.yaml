@@ -1,0 +1,28 @@
+# 03-argocd-apps/staging-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: phoenix-booking-staging
+  namespace: argocd 
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:Pheonix-Hotel-Reservation/phoenix-booking-config-repo-03-argocd-apps.git 
+    targetRevision: main # Or 'develop' branch for continuous integration
+    path: 02-environments/staging/ # Targets the Staging Kustomize overlay
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: staging 
+  syncPolicy:
+    # 🟢 Automated Sync: Changes merged into the 'main' branch deploy immediately to Staging.
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      # Ensure application sync waits for all platform tools (Vault/Istio) to be ready.
+      - PruneLast=true

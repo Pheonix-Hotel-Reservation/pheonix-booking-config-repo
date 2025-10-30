@@ -1,0 +1,26 @@
+# 03-argocd-apps/platform-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: phoenix-platform-tools
+  namespace: argocd 
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: git@github.com:Pheonix-Hotel-Reservation/phoenix-booking-config-repo-03-argocd-apps.git 
+    targetRevision: main  # Tracks the main branch for platform stability
+    path: 01-platform/       # Targets all cluster tools
+    directory:
+      recurse: true
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: tools         # Dedicated namespace for ArgoCD to manage the platform apps
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true 
+      - ApplyOutOfSyncOnly=true

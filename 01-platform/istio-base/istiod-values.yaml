@@ -1,0 +1,24 @@
+# 01-platform/istio-base/istiod-values.yaml
+# Custom values for the Istiod Helm Chart
+global:
+  # Sets the default Istio revision for automatic sidecar injection
+  defaultRevision: default 
+  # Set desired resource limits for stability
+  resource:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+meshConfig:
+  # Policy to enforce STRICT mTLS mesh-wide by default (Zero-Trust foundation)
+  defaultConfig:
+    # Disable Istio Proxy debug logging to reduce noise
+    proxyMetadata:
+      ISTIO_META_ISTIO_PROXY_DEFAULT_LOG_LEVEL: "warn"
+  
+  # Set the policy for traffic entering the mesh: require TLS
+  # This is a soft configuration; PeerAuthentication CRD is used later for STRICT enforcement.
+  # The below configuration primarily targets the Envoy sidecar.
