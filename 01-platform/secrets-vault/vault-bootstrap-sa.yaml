@@ -1,9 +1,0 @@
-# 01-platform/secrets-vault/vault-bootstrap-sa.yaml
-apiVersion: v1
-kind: ServiceAccount
-metadata:
-  name: vault-bootstrap-sa
-  namespace: vault
-  annotations:
-    # Sync Wave 5: Create after Vault namespace exists (Wave 4) but before Job runs
-    argocd.argoproj.io/sync-wave: "5"

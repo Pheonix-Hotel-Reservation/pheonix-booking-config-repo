@@ -1,9 +1,0 @@
-# 01-platform/kustomization.yaml (MUST only contain Kustomize fields)
-apiVersion: kustomize.config.k8s.io/v1beta1
-kind: Kustomization
-resources:
-  - istio-base/
-  - istio-gateway/
-  - secrets-vault/
-  - prometheus-grafana/
-  - logging-opensearch/
