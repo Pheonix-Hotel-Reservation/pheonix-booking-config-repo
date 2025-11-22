@@ -14,7 +14,7 @@ spec:
     targetRevision: main
     chart: cert-manager
     helm:
-      repoURL: https://charts.jetstack.io
+      repoURL: https://charts.jetstack.io/cert-manager
       # pin a chart version you want to use; change if needed
       version: "1.19.1"
       # valueFiles are relative to the repo root path. This file points to the values file
