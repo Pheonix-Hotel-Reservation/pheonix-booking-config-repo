@@ -1,0 +1,32 @@
+# Argo CD Application to install cert-manager (App-of-Apps child)
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: platform-cert-manager
+  namespace: argocd
+  annotations:
+    # run after namespace bootstrap if you have that app (sync-wave can be adjusted)
+    argocd.argoproj.io/sync-wave: "1"
+spec:
+  project: default
+  source:
+    repoURL: 'git@github.com:yourorg/infrastructure-gitops.git'    # << replace with your repo URL
+    targetRevision: main
+    chart: cert-manager
+    helm:
+      repoURL: https://charts.jetstack.io
+      # pin a chart version you want to use; change if needed
+      version: "1.19.1"
+      # valueFiles are relative to the repo root path. This file points to the values file
+      valueFiles:
+        - platform/cert-manager/values.cert-manager.yaml
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: cert-manager
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+
