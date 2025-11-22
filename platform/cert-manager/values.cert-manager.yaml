@@ -1,81 +1,17 @@
-# values.cert-manager.yaml
-# Minimal, safe defaults for a test environment.
-# - installCRDs: true ensures CRDs are installed by the chart on first deploy.
-# - Prometheus scraping disabled by default for simplicity (enable if you have monitoring).
-# - Keep resources small for test cluster.
+
+# platform/cert-manager/values.cert-manager.yaml
+# Minimal safe defaults for testing cert-manager v1.19.1
 installCRDs: true
 
+# keep small for test cluster
 replicaCount: 1
 
-# Controller pod settings
-controller:
-  replicaCount: 1
-  resources:
-    requests:
-      cpu: "100m"
-      memory: "128Mi"
-    limits:
-      cpu: "250m"
-      memory: "256Mi"
-  # Extra args passed to cert-manager controller if you need debug
-  extraArgs: []
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
-# Webhook settings (used by cert-manager admission)
-webhook:
-  replicaCount: 1
-  resources:
-    requests:
-      cpu: "50m"
-      memory: "64Mi"
-    limits:
-      cpu: "200m"
-      memory: "128Mi"
-  # timeoutSeconds controls how long k8s will wait for the admission webhook
-  timeoutSeconds: 10
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
-
-# cainjector sidecar (injects CA into resources)
-cainjector:
-  replicaCount: 1
-  resources:
-    requests:
-      cpu: "30m"
-      memory: "48Mi"
-    limits:
-      cpu: "100m"
-      memory: "128Mi"
-
-# Optional: disable prometheus metrics scrape if you don't have Prometheus yet
+# disable prometheus scraping by default for tests
 prometheus:
   enabled: false
 
-# RBAC and service accounts
-rbac:
-  create: true
-
-serviceAccount:
-  create: true
-  # name: leave blank to let chart pick default
-
-# Image pull secret if you use a private registry (left empty by default)
+# image override (repository + tag + pullPolicy)
 image:
+  repository: quay.io/jetstack/cert-manager-controller
+  tag: v1.19.1
   pullPolicy: IfNotPresent
-  pullSecrets: []
-
-# Set default ingress-shim behavior if you plan to use the ingress shim
-ingressShim:
-  defaultIssuerName: ""
-  defaultIssuerKind: ""
-
-# Extra TLS/CA configuration – for test keep defaults (use cert-manager to create ClusterIssuer later)
-extraVolumes: []
-extraVolumeMounts: []
-
-# Add any additional custom values below (keep minimal for test)
-# e.g. you can add nodeSelector / tolerations here if you want cert-manager scheduled only on control-plane nodes
-
