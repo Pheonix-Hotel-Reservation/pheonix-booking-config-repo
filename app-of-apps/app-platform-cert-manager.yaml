@@ -16,7 +16,7 @@ spec:
     helm:
       repoURL: https://charts.jetstack.io
       # pin a chart version you want to use; change if needed
-      version: "1.1.0"
+      version: "1.19.1"
       # valueFiles are relative to the repo root path. This file points to the values file
       valueFiles:
         - platform/cert-manager/values.cert-manager.yaml
