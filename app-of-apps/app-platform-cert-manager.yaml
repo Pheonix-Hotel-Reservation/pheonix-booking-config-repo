@@ -1,25 +1,28 @@
-# Argo CD Application to install cert-manager (App-of-Apps child)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: platform-cert-manager
   namespace: argocd
   annotations:
-    # run after namespace bootstrap if you have that app (sync-wave can be adjusted)
     argocd.argoproj.io/sync-wave: "1"
 spec:
   project: default
-  source:
-    repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'    # << replace with your repo URL
-    targetRevision: main
-    chart: cert-manager
-    helm:
-      repoURL: https://charts.jetstack.io
-      # pin a chart version you want to use; change if needed
-      # version: "1.19.1"
-      # valueFiles are relative to the repo root path. This file points to the values file
-      valueFiles:
-        - platform/cert-manager/values.cert-manager.yaml
+  # CORRECTED: Using 'sources' (plural) to combine Helm Chart + Git Values
+  sources:
+    # 1. The Helm Chart from Jetstack
+    - repoURL: https://charts.jetstack.io
+      chart: cert-manager
+      targetRevision: "1.19.1"  # ✅ Confirmed correct version
+      helm:
+        valueFiles:
+          # References the 'values' source below
+          - $values/platform/cert-manager/values.cert-manager.yaml
+    
+    # 2. Your Git Repo (for the values file)
+    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git' # Fixed spelling "Pheonix" -> "Phoenix"
+      targetRevision: main
+      ref: values
+
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: cert-manager
@@ -29,4 +32,3 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
-
