@@ -10,13 +10,13 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'git@github.com:yourorg/infrastructure-gitops.git'    # << replace with your repo URL
+    repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'    # << replace with your repo URL
     targetRevision: main
     chart: cert-manager
     helm:
       repoURL: https://charts.jetstack.io
       # pin a chart version you want to use; change if needed
-      version: "1.19.1"
+      version: "1.1.0"
       # valueFiles are relative to the repo root path. This file points to the values file
       valueFiles:
         - platform/cert-manager/values.cert-manager.yaml
