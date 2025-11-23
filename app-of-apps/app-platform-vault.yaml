@@ -19,10 +19,11 @@ spec:
       helm:
         valueFiles:
           - $values/platform/vault/values.vault.base.yaml
-
     - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
       targetRevision: main
       path: platform/vault
+      directory:
+        include: 'ingress.yaml'
 
   destination:
     server: 'https://kubernetes.default.svc'
