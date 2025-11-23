@@ -20,8 +20,6 @@ spec:
       helm:
         valueFiles:
           - $values/platform/vault/values.vault.base.yaml
-        # optionally include aws-unseal overlay if you want auto-unseal immediately:
-          - $values/platform/vault/values.vault.aws-unseal.yaml
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: vault

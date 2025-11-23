@@ -1,32 +1,26 @@
-
-# values.vault.base.yaml
-server:
-  image:
-    repository: hashicorp/vault
-    tag: "1.20.4"            # pin a Vault version you like
-  ha:
-    enabled: true
-  # dataStorage is the simple wrapper the chart uses for PVs
-  dataStorage:
-    enabled: true
-    storageClass: do-block-storage-retain
-    size: 10Gi               # small for test
-  # enable raft storage in the chart
-  raft:
-    enabled: true
-
+# -----------------------------------------------------------------
+# GLOBAL SETTINGS
+# -----------------------------------------------------------------
 ui:
   enabled: true
 
-# enable Prometheus metrics endpoint
-metrics:
+injector:
   enabled: true
-  serviceMonitor:
-    enabled: false   # set true if you already have prometheus-operator and ServiceMonitor scraping
 
-# Keep resources small for test cluster
-resources:
-  server:
+# Enable Prometheus metrics (optional, keep false if you don't have monitoring yet)
+metrics:
+  enabled: false
+
+# -----------------------------------------------------------------
+# SERVER CONFIGURATION
+# -----------------------------------------------------------------
+server:
+  image:
+    repository: hashicorp/vault
+    tag: "1.20.4"
+
+  # Resource limits (kept small for dev/test)
+  resources:
     requests:
       cpu: "100m"
       memory: "256Mi"
@@ -34,9 +28,69 @@ resources:
       cpu: "500m"
       memory: "512Mi"
 
-# injector (for Vault Agent Injector) — enable later if you use it
-injector:
-  enabled: true
+  # 1. STORAGE (DigitalOcean)
+  # This creates the PVCs. Critical for Raft to work.
+  dataStorage:
+    enabled: true
+    size: 10Gi
+    storageClass: "do-block-storage-retain" # Ensure this exists in your cluster
+    accessMode: ReadWriteOnce
 
-# Do NOT put AWS creds or KMS ARNs here in plaintext.
-# Use ExternalSecrets to inject AWS bootstrap creds or use SealedSecrets.
+  # 2. SECRETS MAPPING
+  # Maps the Kubernetes Secret (aws-kms-creds) to Env Vars for Vault
+  extraSecretEnvironmentVars:
+    - envName: AWS_ACCESS_KEY_ID
+      secretName: aws-kms-creds
+      secretKey: accessKeyID
+    - envName: AWS_SECRET_ACCESS_KEY
+      secretName: aws-kms-creds
+      secretKey: secretAccessKey
+    - envName: AWS_REGION
+      secretName: aws-kms-creds
+      secretKey: region
+    - envName: VAULT_AWSKMS_SEAL_KEY_ID
+      secretName: aws-kms-creds
+      secretKey: kmsKeyId
+
+  # 3. HIGH AVAILABILITY (Raft + KMS)
+  ha:
+    enabled: true
+    replicas: 3
+    
+    # Enable Raft logic in the chart wrapper
+    raft:
+      enabled: true
+      setNodeId: true
+
+    # The actual HCL Configuration file
+    config: |
+      ui = true
+
+      listener "tcp" {
+        tls_disable = 1
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+      }
+
+      # Raft Storage Backend
+      storage "raft" {
+        path = "/vault/data"
+        
+        # Retry Join allows pods to find the leader automatically
+        retry_join {
+          leader_api_addr = "http://platform-vault-0.platform-vault-internal:8200"
+        }
+        retry_join {
+          leader_api_addr = "http://platform-vault-1.platform-vault-internal:8200"
+        }
+        retry_join {
+          leader_api_addr = "http://platform-vault-2.platform-vault-internal:8200"
+        }
+      }
+
+      service_registration "kubernetes" {}
+
+      # AWS KMS Auto-Unseal
+      seal "awskms" {
+        # Credentials are read automatically from ENV vars defined above
+      }
