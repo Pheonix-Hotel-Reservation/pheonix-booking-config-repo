@@ -3,7 +3,7 @@
 server:
   image:
     repository: hashicorp/vault
-    tag: "1.14.0"            # pin a Vault version you like
+    tag: "1.20.4"            # pin a Vault version you like
   ha:
     enabled: true
   # dataStorage is the simple wrapper the chart uses for PVs

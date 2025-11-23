@@ -1,27 +1,19 @@
 
 server:
   # 1. Map the secrets to the specific Env Vars Vault expects
-  extraEnv:
-    - name: AWS_ACCESS_KEY_ID
-      valueFrom:
-        secretKeyRef:
-          name: aws-kms-creds
-          key: accessKeyID
-    - name: AWS_SECRET_ACCESS_KEY
-      valueFrom:
-        secretKeyRef:
-          name: aws-kms-creds
-          key: secretAccessKey
-    - name: AWS_REGION
-      valueFrom:
-        secretKeyRef:
-          name: aws-kms-creds
-          key: region
-    - name: VAULT_AWSKMS_SEAL_KEY_ID
-      valueFrom:
-        secretKeyRef:
-          name: aws-kms-creds
-          key: kmsKeyId
+  extraSecretEnvironmentVars:
+    - envName: AWS_ACCESS_KEY_ID
+      secretName: aws-kms-creds
+      secretKey: accessKeyID
+    - envName: AWS_SECRET_ACCESS_KEY
+      secretName: aws-kms-creds
+      secretKey: secretAccessKey
+    - envName: AWS_REGION
+      secretName: aws-kms-creds
+      secretKey: region
+    - envName: VAULT_AWSKMS_SEAL_KEY_ID
+      secretName: aws-kms-creds
+      secretKey: kmsKeyId  # Ensure this matches the key in your secret
   ha:
     enabled: true
     replicas: 3
