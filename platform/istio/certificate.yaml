@@ -8,6 +8,7 @@ spec:
   issuerRef:
     name: letsencrypt
     kind: ClusterIssuer
-  commonName: vault.pheonix.live
+  commonName: "*.pheonix.live"
   dnsNames:
-    - vault.pheonix.live
+    - "pheonix.live"
+    - "*.pheonix.live"

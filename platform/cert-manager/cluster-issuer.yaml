@@ -11,7 +11,8 @@ spec:
     privateKeySecretRef:
       name: letsencrypt-account-key
     solvers:
-    - http01:
-        ingress:
-          # This tells cert-manager to use the Istio Ingress Controller
-          class: istio
+    - dns01:
+        cloudflare:
+          apiTokenSecretRef:
+            name: cloudflare-api-token
+            key: api-token

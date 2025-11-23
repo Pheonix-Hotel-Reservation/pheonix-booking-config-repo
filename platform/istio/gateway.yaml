@@ -5,25 +5,26 @@ metadata:
   namespace: istio-ingress
 spec:
   selector:
-    istio: ingress  # Matches your existing Istio Ingress Controller pods
+    istio: ingress
   servers:
-  # Port 80: Open for ACME Challenges + HTTP Redirects
+  # Port 80: Global Redirect
+  # Since DNS-01 handles validation, we can safely redirect EVERYTHING to HTTPS.
   - port:
       number: 80
       name: http
       protocol: HTTP
     hosts:
-    - "*"  # Accept traffic for any domain on HTTP
-    # We DO NOT enable httpsRedirect here. 
-    # We handle it in VirtualServices to prevent breaking Cert-Manager.
+    - "*"
+    tls:
+      httpsRedirect: true
 
-  # Port 443: Secure Traffic
-  # - port:
-  #    number: 443
-  #    name: https
-  #    protocol: HTTPS
-  #  hosts:
-  #  - "*.pheonix.live" # Allow any subdomain defined in the Certificate
-  #  tls:
-  #    mode: SIMPLE
-  #    credentialName: pheonix-live-tls # The shared secret
+  # Port 443: Secure Traffic (Wildcard)
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "*.pheonix.live"
+    tls:
+      mode: SIMPLE
+      credentialName: pheonix-live-tls  # Uses your new wildcard cert
