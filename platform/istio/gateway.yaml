@@ -5,7 +5,7 @@ metadata:
   namespace: istio-ingress
 spec:
   selector:
-    istio: ingressgateway  # Matches your existing Istio Ingress Controller pods
+    istio: ingress  # Matches your existing Istio Ingress Controller pods
   servers:
   # Port 80: Open for ACME Challenges + HTTP Redirects
   - port:
