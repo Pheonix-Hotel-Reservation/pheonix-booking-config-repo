@@ -5,7 +5,7 @@ metadata:
   name: platform-vault
   namespace: argocd
   annotations:
-    argocd.argoproj.io/sync-wave: "3"
+    argocd.argoproj.io/sync-wave: "4"
 spec:
   project: default
   sources:
