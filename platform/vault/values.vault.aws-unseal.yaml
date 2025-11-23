@@ -1,12 +1,6 @@
 
-# platform/vault/values.vault.aws-unseal.yaml
-unsealer:
-  auto:
-    enabled: true
-    awsKms:
-      # optional: you can keep kmsKeyId here or supply it via secret as shown below
-      # kmsKeyId: "arn:aws:kms:us-east-1:111122223333:key/NEW-KEY-ID"
 server:
+  # 1. Map the secrets to the specific Env Vars Vault expects
   extraEnv:
     - name: AWS_ACCESS_KEY_ID
       valueFrom:
@@ -23,9 +17,32 @@ server:
         secretKeyRef:
           name: aws-kms-creds
           key: region
-    # optional: if your chart allows reading kmsKeyId from env instead of values
-    - name: VAULT_AWS_UNSEAL_KMS_KEY_ID
+    - name: VAULT_AWSKMS_SEAL_KEY_ID
       valueFrom:
         secretKeyRef:
           name: aws-kms-creds
           key: kmsKeyId
+  ha:
+    enabled: true
+    replicas: 3
+    config: |
+      ui = true
+
+      listener "tcp" {
+        tls_disable = 1
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+      }
+
+      storage "consul" {
+        path = "vault"
+        address = "HOST_IP:8500"
+      }
+
+      service_registration "kubernetes" {}
+
+      # --- THIS BLOCK IS REQUIRED ---
+      seal "awskms" {
+        # Vault automatically finds the credentials and key ID
+        # from the environment variables we defined above.
+      }
