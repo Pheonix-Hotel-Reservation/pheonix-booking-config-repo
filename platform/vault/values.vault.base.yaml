@@ -3,10 +3,8 @@
 # -----------------------------------------------------------------
 ui:
   enabled: true
-
 injector:
   enabled: true
-
 metrics:
   enabled: false
 
@@ -17,19 +15,17 @@ server:
   image:
     repository: hashicorp/vault
     tag: "1.20.4"
-
+  
   config: |
     ui = true
-
     listener "tcp" {
       tls_disable = 1
       address = "[::]:8200"
       cluster_address = "[::]:8201"
     }
-
     storage "raft" {
       path = "/vault/data"
-        
+      
       retry_join {
         leader_api_addr = "http://platform-vault-0.platform-vault-internal:8200"
       }
@@ -40,12 +36,10 @@ server:
         leader_api_addr = "http://platform-vault-2.platform-vault-internal:8200"
       }
     }
-
     service_registration "kubernetes" {}
-
     seal "awskms" {
     }
-
+  
   resources:
     requests:
       cpu: "100m"
@@ -53,14 +47,14 @@ server:
     limits:
       cpu: "500m"
       memory: "512Mi"
-
+  
   # 1. STORAGE
   dataStorage:
     enabled: true
     size: 10Gi
     storageClass: "do-block-storage-retain"
     accessMode: ReadWriteOnce
-
+  
   # 2. SECRETS MAPPING
   extraSecretEnvironmentVars:
     - envName: AWS_ACCESS_KEY_ID
@@ -75,15 +69,11 @@ server:
     - envName: VAULT_AWSKMS_SEAL_KEY_ID
       secretName: aws-kms-creds
       secretKey: kmsKeyId
-
-  # 3. HIGH AVAILABILITY (Raft + KMS)
+  
+  # 3. HIGH AVAILABILITY
   ha:
     enabled: true
     replicas: 3
-    
     raft:
       enabled: true
       setNodeId: true
-
-    # --- CORRECTED LOCATION: INDENTED UNDER 'ha' ---
-   
