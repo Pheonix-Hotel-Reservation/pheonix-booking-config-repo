@@ -7,7 +7,6 @@ ui:
 injector:
   enabled: true
 
-# Enable Prometheus metrics (optional, keep false if you don't have monitoring yet)
 metrics:
   enabled: false
 
@@ -19,7 +18,6 @@ server:
     repository: hashicorp/vault
     tag: "1.20.4"
 
-  # Resource limits (kept small for dev/test)
   resources:
     requests:
       cpu: "100m"
@@ -28,47 +26,14 @@ server:
       cpu: "500m"
       memory: "512Mi"
 
-  config: |
-      ui = true
-
-      listener "tcp" {
-        tls_disable = 1
-        address = "[::]:8200"
-        cluster_address = "[::]:8201"
-      }
-
-      # Raft Storage Backend
-      storage "raft" {
-        path = "/vault/data"
-        
-        # Retry Join allows pods to find the leader automatically
-        retry_join {
-          leader_api_addr = "http://platform-vault-0.platform-vault-internal:8200"
-        }
-        retry_join {
-          leader_api_addr = "http://platform-vault-1.platform-vault-internal:8200"
-        }
-        retry_join {
-          leader_api_addr = "http://platform-vault-2.platform-vault-internal:8200"
-        }
-      }
-
-      service_registration "kubernetes" {}
-
-      # AWS KMS Auto-Unseal
-      seal "awskms" {
-        # Credentials are read automatically from ENV vars defined above
-      }
-  # 1. STORAGE (DigitalOcean)
-  # This creates the PVCs. Critical for Raft to work.
+  # 1. STORAGE
   dataStorage:
     enabled: true
     size: 10Gi
-    storageClass: "do-block-storage-retain" # Ensure this exists in your cluster
+    storageClass: "do-block-storage-retain"
     accessMode: ReadWriteOnce
 
   # 2. SECRETS MAPPING
-  # Maps the Kubernetes Secret (aws-kms-creds) to Env Vars for Vault
   extraSecretEnvironmentVars:
     - envName: AWS_ACCESS_KEY_ID
       secretName: aws-kms-creds
@@ -88,10 +53,35 @@ server:
     enabled: true
     replicas: 3
     
-    # Enable Raft logic in the chart wrapper
     raft:
       enabled: true
       setNodeId: true
 
-    # The actual HCL Configuration file
-    
+    # --- CORRECTED LOCATION: INDENTED UNDER 'ha' ---
+    config: |
+      ui = true
+
+      listener "tcp" {
+        tls_disable = 1
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+      }
+
+      storage "raft" {
+        path = "/vault/data"
+        
+        retry_join {
+          leader_api_addr = "http://platform-vault-0.platform-vault-internal:8200"
+        }
+        retry_join {
+          leader_api_addr = "http://platform-vault-1.platform-vault-internal:8200"
+        }
+        retry_join {
+          leader_api_addr = "http://platform-vault-2.platform-vault-internal:8200"
+        }
+      }
+
+      service_registration "kubernetes" {}
+
+      seal "awskms" {
+      }
