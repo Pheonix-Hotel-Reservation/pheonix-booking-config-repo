@@ -15,6 +15,6 @@ spec:
     route:
     - destination:
         # The service name usually follows: <release-name>-grafana
-        host: kube-prometheus-stack-grafana.monitoring.svc.cluster.local
+        host: monitoring-stack-grafana.monitoring.svc.cluster.local
         port:
           number: 80
