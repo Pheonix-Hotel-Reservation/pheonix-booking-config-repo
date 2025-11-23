@@ -23,6 +23,12 @@ spec:
       targetRevision: main
       ref: values
 
+    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git' # Fixed spelling "Pheonix" -> "Phoenix"
+      targetRevision: main
+      path: platform/cert-manager
+      directory:
+        include: 'cluster-issuer.yaml'
+
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: cert-manager
