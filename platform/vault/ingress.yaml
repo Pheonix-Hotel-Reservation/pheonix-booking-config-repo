@@ -7,10 +7,12 @@ spec:
   hosts:
   - vault.pheonix.live
   gateways:
-  # Syntax: <namespace>/<gateway-name>
   - istio-ingress/main-gateway
   http:
-  # 1. Redirect HTTP to HTTPS (Smart Redirect)
+  # --- RULE 1: SMART REDIRECT (HTTP -> HTTPS) ---
+  # This redirects everything EXCEPT the ACME challenge.
+  # We don't need to explicitly exclude ACME here because Cert-Manager's
+  # auto-generated rule (which is longer) will take precedence naturally.
   - match:
     - uri:
         prefix: /
@@ -19,7 +21,7 @@ spec:
       scheme: https
       port: 443
   
-  # 2. Route HTTPS traffic to Vault
+  # --- RULE 2: MAIN APP TRAFFIC (HTTPS) ---
   - match:
     - uri:
         prefix: /

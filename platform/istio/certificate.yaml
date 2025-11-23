@@ -8,10 +8,6 @@ spec:
   issuerRef:
     name: letsencrypt
     kind: ClusterIssuer
-  commonName: prod.pheonix.live
+  commonName: vault.pheonix.live
   dnsNames:
     - vault.pheonix.live
-    - grafana.pheonix.live
-    - opensearch.pheonix.live
-    - staging.pheonix.live
-    - prod.pheonix.live
