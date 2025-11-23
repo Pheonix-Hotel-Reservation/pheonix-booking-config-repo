@@ -26,11 +26,21 @@ server:
         cluster_address = "[::]:8201"
       }
 
-      storage "consul" {
-        path = "vault"
-        address = "HOST_IP:8500"
+      storage "raft" {
+        path = "/vault/data"
+        
+        # This tells the pods how to find each other in K8s
+        retry_join {
+          leader_api_addr = "http://platform-vault-0.platform-vault-internal:8200"
+        }
+        retry_join {
+          leader_api_addr = "http://platform-vault-1.platform-vault-internal:8200"
+        }
+        retry_join {
+          leader_api_addr = "http://platform-vault-2.platform-vault-internal:8200"
+        }
       }
-
+      
       service_registration "kubernetes" {}
 
       # --- THIS BLOCK IS REQUIRED ---
