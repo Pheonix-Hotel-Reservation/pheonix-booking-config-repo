@@ -1,0 +1,31 @@
+
+# platform/vault/values.vault.aws-unseal.yaml
+unsealer:
+  auto:
+    enabled: true
+    awsKms:
+      # optional: you can keep kmsKeyId here or supply it via secret as shown below
+      # kmsKeyId: "arn:aws:kms:us-east-1:111122223333:key/NEW-KEY-ID"
+server:
+  extraEnvironmentVars:
+    - name: AWS_ACCESS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: aws-kms-creds
+          key: accessKeyID
+    - name: AWS_SECRET_ACCESS_KEY
+      valueFrom:
+        secretKeyRef:
+          name: aws-kms-creds
+          key: secretAccessKey
+    - name: AWS_REGION
+      valueFrom:
+        secretKeyRef:
+          name: aws-kms-creds
+          key: region
+    # optional: if your chart allows reading kmsKeyId from env instead of values
+    - name: VAULT_AWS_UNSEAL_KMS_KEY_ID
+      valueFrom:
+        secretKeyRef:
+          name: aws-kms-creds
+          key: kmsKeyId

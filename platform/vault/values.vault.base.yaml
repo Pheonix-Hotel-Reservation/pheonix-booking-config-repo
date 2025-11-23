@@ -1,0 +1,42 @@
+
+# values.vault.base.yaml
+server:
+  image:
+    repository: hashicorp/vault
+    tag: "1.14.0"            # pin a Vault version you like
+  ha:
+    enabled: true
+  # dataStorage is the simple wrapper the chart uses for PVs
+  dataStorage:
+    enabled: true
+    storageClass: do-block-storage-retain
+    size: 10Gi               # small for test
+  # enable raft storage in the chart
+  raft:
+    enabled: true
+
+ui:
+  enabled: true
+
+# enable Prometheus metrics endpoint
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: false   # set true if you already have prometheus-operator and ServiceMonitor scraping
+
+# Keep resources small for test cluster
+resources:
+  server:
+    requests:
+      cpu: "100m"
+      memory: "256Mi"
+    limits:
+      cpu: "500m"
+      memory: "512Mi"
+
+# injector (for Vault Agent Injector) — enable later if you use it
+injector:
+  enabled: true
+
+# Do NOT put AWS creds or KMS ARNs here in plaintext.
+# Use ExternalSecrets to inject AWS bootstrap creds or use SealedSecrets.
