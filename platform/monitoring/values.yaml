@@ -12,6 +12,12 @@ grafana:
     storageClassName: "do-block-storage-retain"
     size: 10Gi
 
+  defaultConfig:
+    livenessProbe:
+      initialDelaySeconds: 45
+    readinessProbe:
+      initialDelaySeconds: 45
+
 # 2. Prometheus Configuration
 prometheus:
   enabled: true
