@@ -30,8 +30,8 @@ spec:
       protocol: HTTP
     hosts:
     - vault.pheonix.live
-    tls:
-      httpsRedirect: true
+    # tls:
+    #  httpsRedirect: true
   - port:
       number: 443
       name: https
@@ -44,22 +44,22 @@ spec:
 
 ---
 # 3. VirtualService (Lives in vault ns, references the Gateway)
-apiVersion: networking.istio.io/v1beta1
-kind: VirtualService
-metadata:
-  name: vault-vs
-  namespace: vault
-spec:
-  hosts:
-  - vault.pheonix.live
-  gateways:
-  - istio-ingress/vault-gateway  # <--- Namespace/Name syntax
-  http:
-  - match:
-    - uri:
-        prefix: /
-    route:
-    - destination:
-        host: platform-vault-ui.vault.svc.cluster.local
-        port:
-          number: 8200
+# apiVersion: networking.istio.io/v1beta1
+# kind: VirtualService
+# metadata:
+#  name: vault-vs
+#  namespace: vault
+# spec:
+#  hosts:
+#  - vault.pheonix.live
+#  gateways:
+#  - istio-ingress/vault-gateway  # <--- Namespace/Name syntax
+#  http:
+#  - match:
+#    - uri:
+#        prefix: /
+#    route:
+#    - destination:
+#        host: platform-vault-ui.vault.svc.cluster.local
+#        port:
+#          number: 8200
