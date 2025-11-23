@@ -1,0 +1,29 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: main-gateway
+  namespace: istio-ingress
+spec:
+  selector:
+    istio: ingress  # Matches your existing Istio Ingress Controller pods
+  servers:
+  # Port 80: Open for ACME Challenges + HTTP Redirects
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"  # Accept traffic for any domain on HTTP
+    # We DO NOT enable httpsRedirect here. 
+    # We handle it in VirtualServices to prevent breaking Cert-Manager.
+
+  # Port 443: Secure Traffic
+  - port:
+      number: 443
+      name: https
+      protocol: HTTPS
+    hosts:
+    - "*.pheonix.live" # Allow any subdomain defined in the Certificate
+    tls:
+      mode: SIMPLE
+      credentialName: pheonix-live-tls # The shared secret

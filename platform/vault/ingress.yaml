@@ -1,65 +1,30 @@
-# 1. Certificate (Lives in ingress ns)
-apiVersion: cert-manager.io/v1
-kind: Certificate
-metadata:
-  name: vault-tls
-  namespace: istio-ingress
-spec:
-  secretName: vault-tls-secret
-  issuerRef:
-    name: letsencrypt
-    kind: ClusterIssuer
-  commonName: vault.pheonix.live  
-  dnsNames:
-    - vault.pheonix.live
-
----
-# 2. Gateway (Lives in ingress ns to access the secret)
 apiVersion: networking.istio.io/v1beta1
-kind: Gateway
+kind: VirtualService
 metadata:
-  name: vault-gateway
-  namespace: istio-ingress
+  name: vault-vs
+  namespace: vault
 spec:
-  selector:
-    istio: ingress
-  servers:
-  - port:
-      number: 80
-      name: http
-      protocol: HTTP
-    hosts:
-    - vault.pheonix.live
-    # tls:
-    #  httpsRedirect: true
-  - port:
-      number: 443
-      name: https
-      protocol: HTTPS
-    hosts:
-    - vault.pheonix.live
-    tls:
-      mode: SIMPLE
-      credentialName: vault-tls-secret 
-
----
-# 3. VirtualService (Lives in vault ns, references the Gateway)
-# apiVersion: networking.istio.io/v1beta1
-# kind: VirtualService
-# metadata:
-#  name: vault-vs
-#  namespace: vault
-# spec:
-#  hosts:
-#  - vault.pheonix.live
-#  gateways:
-#  - istio-ingress/vault-gateway  # <--- Namespace/Name syntax
-#  http:
-#  - match:
-#    - uri:
-#        prefix: /
-#    route:
-#    - destination:
-#        host: platform-vault-ui.vault.svc.cluster.local
-#        port:
-#          number: 8200
+  hosts:
+  - vault.pheonix.live
+  gateways:
+  # Syntax: <namespace>/<gateway-name>
+  - istio-ingress/main-gateway
+  http:
+  # 1. Redirect HTTP to HTTPS (Smart Redirect)
+  - match:
+    - uri:
+        prefix: /
+      port: 80
+    redirect:
+      scheme: https
+      port: 443
+  
+  # 2. Route HTTPS traffic to Vault
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        host: platform-vault-ui.vault.svc.cluster.local
+        port:
+          number: 8200
