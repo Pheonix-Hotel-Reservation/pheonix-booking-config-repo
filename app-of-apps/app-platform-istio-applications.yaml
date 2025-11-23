@@ -82,7 +82,12 @@ spec:
   sources:
     - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
       targetRevision: main
+      path: platform/istio
       ref: values
+
+      directory:
+        include: '{certificate.yaml, gateway.yaml}'
+
     - repoURL: https://istio-release.storage.googleapis.com/charts
       chart: gateway
       targetRevision: 1.28.0
