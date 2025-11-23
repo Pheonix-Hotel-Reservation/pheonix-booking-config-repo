@@ -18,6 +18,34 @@ server:
     repository: hashicorp/vault
     tag: "1.20.4"
 
+  config: |
+    ui = true
+
+    listener "tcp" {
+      tls_disable = 1
+      address = "[::]:8200"
+      cluster_address = "[::]:8201"
+    }
+
+    storage "raft" {
+      path = "/vault/data"
+        
+      retry_join {
+        leader_api_addr = "http://platform-vault-0.platform-vault-internal:8200"
+      }
+      retry_join {
+        leader_api_addr = "http://platform-vault-1.platform-vault-internal:8200"
+      }
+      retry_join {
+        leader_api_addr = "http://platform-vault-2.platform-vault-internal:8200"
+      }
+    }
+
+    service_registration "kubernetes" {}
+
+    seal "awskms" {
+    }
+
   resources:
     requests:
       cpu: "100m"
@@ -58,30 +86,4 @@ server:
       setNodeId: true
 
     # --- CORRECTED LOCATION: INDENTED UNDER 'ha' ---
-    config: |
-      ui = true
-
-      listener "tcp" {
-        tls_disable = 1
-        address = "[::]:8200"
-        cluster_address = "[::]:8201"
-      }
-
-      storage "raft" {
-        path = "/vault/data"
-        
-        retry_join {
-          leader_api_addr = "http://platform-vault-0.platform-vault-internal:8200"
-        }
-        retry_join {
-          leader_api_addr = "http://platform-vault-1.platform-vault-internal:8200"
-        }
-        retry_join {
-          leader_api_addr = "http://platform-vault-2.platform-vault-internal:8200"
-        }
-      }
-
-      service_registration "kubernetes" {}
-
-      seal "awskms" {
-      }
+   
