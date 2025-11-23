@@ -18,12 +18,12 @@ spec:
     # We handle it in VirtualServices to prevent breaking Cert-Manager.
 
   # Port 443: Secure Traffic
-  - port:
-      number: 443
-      name: https
-      protocol: HTTPS
-    hosts:
-    - "*.pheonix.live" # Allow any subdomain defined in the Certificate
-    tls:
-      mode: SIMPLE
-      credentialName: pheonix-live-tls # The shared secret
+  # - port:
+  #    number: 443
+  #    name: https
+  #    protocol: HTTPS
+  #  hosts:
+  #  - "*.pheonix.live" # Allow any subdomain defined in the Certificate
+  #  tls:
+  #    mode: SIMPLE
+  #    credentialName: pheonix-live-tls # The shared secret
