@@ -7,7 +7,7 @@ unsealer:
       # optional: you can keep kmsKeyId here or supply it via secret as shown below
       # kmsKeyId: "arn:aws:kms:us-east-1:111122223333:key/NEW-KEY-ID"
 server:
-  extraEnvironmentVars:
+  extraEnv:
     - name: AWS_ACCESS_KEY_ID
       valueFrom:
         secretKeyRef:
