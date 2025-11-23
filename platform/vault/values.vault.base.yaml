@@ -28,6 +28,37 @@ server:
       cpu: "500m"
       memory: "512Mi"
 
+  config: |
+      ui = true
+
+      listener "tcp" {
+        tls_disable = 1
+        address = "[::]:8200"
+        cluster_address = "[::]:8201"
+      }
+
+      # Raft Storage Backend
+      storage "raft" {
+        path = "/vault/data"
+        
+        # Retry Join allows pods to find the leader automatically
+        retry_join {
+          leader_api_addr = "http://platform-vault-0.platform-vault-internal:8200"
+        }
+        retry_join {
+          leader_api_addr = "http://platform-vault-1.platform-vault-internal:8200"
+        }
+        retry_join {
+          leader_api_addr = "http://platform-vault-2.platform-vault-internal:8200"
+        }
+      }
+
+      service_registration "kubernetes" {}
+
+      # AWS KMS Auto-Unseal
+      seal "awskms" {
+        # Credentials are read automatically from ENV vars defined above
+      }
   # 1. STORAGE (DigitalOcean)
   # This creates the PVCs. Critical for Raft to work.
   dataStorage:
@@ -63,34 +94,4 @@ server:
       setNodeId: true
 
     # The actual HCL Configuration file
-    config: |
-      ui = true
-
-      listener "tcp" {
-        tls_disable = 1
-        address = "[::]:8200"
-        cluster_address = "[::]:8201"
-      }
-
-      # Raft Storage Backend
-      storage "raft" {
-        path = "/vault/data"
-        
-        # Retry Join allows pods to find the leader automatically
-        retry_join {
-          leader_api_addr = "http://platform-vault-0.platform-vault-internal:8200"
-        }
-        retry_join {
-          leader_api_addr = "http://platform-vault-1.platform-vault-internal:8200"
-        }
-        retry_join {
-          leader_api_addr = "http://platform-vault-2.platform-vault-internal:8200"
-        }
-      }
-
-      service_registration "kubernetes" {}
-
-      # AWS KMS Auto-Unseal
-      seal "awskms" {
-        # Credentials are read automatically from ENV vars defined above
-      }
+    
