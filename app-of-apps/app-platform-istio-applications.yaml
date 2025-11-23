@@ -22,6 +22,7 @@ spec:
     - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
       targetRevision: main
       ref: values
+  
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-system
@@ -82,11 +83,7 @@ spec:
   sources:
     - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
       targetRevision: main
-      path: platform/istio
       ref: values
-
-      directory:
-        include: '{certificate.yaml, gateway.yaml}'
 
     - repoURL: https://istio-release.storage.googleapis.com/charts
       chart: gateway
@@ -94,6 +91,14 @@ spec:
       helm:
         valueFiles:
           - $values/platform/istio/values.gateway.yaml
+
+    - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
+      targetRevision: main
+      path: platform/istio
+      directory:
+        include: '{certificate.yaml,gateway.yaml}'
+
+
   destination:
     server: https://kubernetes.default.svc
     namespace: istio-ingress
