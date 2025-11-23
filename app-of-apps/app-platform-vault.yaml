@@ -12,7 +12,6 @@ spec:
     - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'   # <-- replace with your repo URL
       targetRevision: main
       ref: values
-      path: platform/vault
     
     - repoURL: https://helm.releases.hashicorp.com
       chart: vault
