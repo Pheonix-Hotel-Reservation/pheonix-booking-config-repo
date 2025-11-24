@@ -3,7 +3,7 @@
 # Configuration for the OpenSearch Dashboards (UI) component
 # Note: The release name of the cluster is assumed to be 'opensearch-cluster'
 
-opensearchHosts: "http://opensearch-cluster-master.opensearch.svc.cluster.local:9200"
+opensearchHosts: "http://opensearch-cluster-data.opensearch.svc.cluster.local:9200"
 
 # Resources (adjust for your cluster size)
 resources:
