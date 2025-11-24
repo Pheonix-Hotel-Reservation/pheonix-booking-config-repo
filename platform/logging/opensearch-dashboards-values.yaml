@@ -6,7 +6,7 @@
 config:
   opensearch_dashboards.yml:
     # Set the host to the correct internal service
-    opensearch.hosts: [ "http://opensearch-cluster-master.opensearch.svc.cluster.local:9200" ]
+    opensearch.hosts: [ "http://opensearch-cluster-data.opensearch.svc.cluster.local:9200" ]
     
     # CRITICAL: Configure the pod to use the injected ENV VAR for Basic Auth
     opensearch.requestHeadersAllowlist: [ "Authorization" ]
