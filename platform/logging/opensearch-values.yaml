@@ -4,9 +4,9 @@
 clusterName: opensearch-cluster
 
 
-masterService: opensearch-cluster-data-headless
+masterService: opensearch-cluster-data
 discovery:
-  seedHosts: opensearch-cluster-data-headless
+  seedHosts: opensearch-cluster-data
 
 # CRITICAL: Explicitly disable the internal dashboards component to avoid conflicts
 # with the separate opensearch-dashboards application.
