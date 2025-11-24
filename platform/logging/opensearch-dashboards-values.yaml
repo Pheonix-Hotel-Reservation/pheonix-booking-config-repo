@@ -3,10 +3,8 @@
 # Configuration for the OpenSearch Dashboards (UI) component
 # Note: The release name of the cluster is assumed to be 'opensearch-cluster'
 
-envs:
-  - name: OPENSEARCH_HOSTS
-    value: "https://opensearch-cluster-data.opensearch.svc.cluster.local:9200"
 
+opensearchHosts: "https://opensearch-cluster-data.opensearch.svc.cluster.local:9200"
 
 config:
   opensearch_dashboards.yml:
