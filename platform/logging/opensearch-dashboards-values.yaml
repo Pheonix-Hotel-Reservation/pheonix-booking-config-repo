@@ -1,8 +1,3 @@
-# path: platform/logging/opensearch-dashboards-values.yaml
-
-# Configuration for the OpenSearch Dashboards (UI) component
-# Note: The release name of the cluster is assumed to be 'opensearch-cluster'
-
 
 opensearchHosts: "https://opensearch-cluster-data.opensearch.svc.cluster.local:9200"
 
@@ -11,17 +6,11 @@ opensearchAccount:
 
 config:
   opensearch_dashboards.yml:
-    # Set the host to the correct internal service
     opensearch.hosts: [ "https://opensearch-cluster-data.opensearch.svc.cluster.local:9200" ]
-    
-    # CRITICAL: Configure the pod to use the injected ENV VAR for Basic Auth
     opensearch.requestHeadersAllowlist: [ "Authorization" ]
     opensearch.username: "admin"
-    # opensearch.password: ${OPENSEARCH_ADMIN_PASSWORD} # <-- This is the secure reference
-
     opensearch.ssl.verificationMode: none
 
-# Resources (adjust for your cluster size)
 resources:
   requests:
     cpu: 100m
