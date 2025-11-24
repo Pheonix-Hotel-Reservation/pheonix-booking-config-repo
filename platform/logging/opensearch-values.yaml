@@ -42,3 +42,14 @@ extraEnvs:
 #  initialDelaySeconds: 15
 #  periodSeconds: 10
 #  timeoutSeconds: 5
+config:
+  # The essential OpenSearch configuration block
+  opensearch.yml: |
+    # Node discovery configuration
+    cluster.initial_cluster_manager_nodes: 
+      - opensearch-cluster-data-0
+      - opensearch-cluster-data-1
+      - opensearch-cluster-data-2
+      
+    discovery.seed_hosts:
+      - opensearch-cluster-data-headless.opensearch.svc.cluster.local:9300
