@@ -18,7 +18,6 @@ spec:
     - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
       targetRevision: main
       ref: values  # <--- Sets the variable $values
-      path: platform/logging
       
     # ----------------------------------------------------------------------
     # SOURCE 2: Helm Chart (The Consumer)
