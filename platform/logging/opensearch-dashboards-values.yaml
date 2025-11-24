@@ -16,6 +16,8 @@ config:
     opensearch.username: "admin"
     opensearch.password: ${OPENSEARCH_ADMIN_PASSWORD} # <-- This is the secure reference
 
+    opensearch.ssl.verificationMode: none
+
 # Resources (adjust for your cluster size)
 resources:
   requests:
