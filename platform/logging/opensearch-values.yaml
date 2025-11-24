@@ -40,7 +40,7 @@ extraEnvs:
     valueFrom:
       secretKeyRef:
         name: opensearch-admin-secret # Name of the K8s Secret created by ESO
-        key: value                   # Key where ESO stores the password (as per ESO config)
+        key: password                   # Key where ESO stores the password (as per ESO config)
 
 # Enable Istio sidecar health checks (optional but recommended)
 # readinessProbe:
