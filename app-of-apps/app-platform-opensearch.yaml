@@ -23,7 +23,7 @@ spec:
     # SOURCE 2: Helm Chart (The Consumer)
     # ----------------------------------------------------------------------
     - repoURL: https://opensearch-project.github.io/helm-charts/
-      targetRevision: 2.16.0
+      targetRevision: 3.3.2
       chart: opensearch
       helm:
         valueFiles:
