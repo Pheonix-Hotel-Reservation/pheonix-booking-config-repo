@@ -1,21 +1,32 @@
 # platform/logging/opensearch-ingress.yaml
 
-# 1. VirtualService for OpenSearch Dashboards UI (User Access)
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: opensearch-dashboards-vs
-  namespace: opensearch # Deploy into the OpenSearch namespace
+  namespace: opensearch
 spec:
   hosts:
-    - "opensearch.pheonix.live" # Public URL for the Dashboards
+    - "opensearch.pheonix.live" 
   gateways:
-    - istio-system/main-gateway # Use your main Istio Ingress Gateway
+    - istio-ingress/main-gateway # Assumed namespace based on previous fix
   http:
-  - route:
+  
+  # 1. HTTP to HTTPS Redirect (Port 80)
+  - match:
+    - uri:
+        prefix: /
+      port: 80
+    redirect:
+      scheme: https
+      port: 443
+  
+  # 2. Secure Routing to Dashboards (Port 443)
+  - match:
+    - uri:
+        prefix: /
+    route:
     - destination:
-        # Internal Kubernetes FQDN for the Dashboards service
         host: opensearch-dashboards.opensearch.svc.cluster.local 
         port:
-          # Port exposed by the dashboards service, typically 5601
           number: 5601
