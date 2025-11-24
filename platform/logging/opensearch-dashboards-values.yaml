@@ -6,6 +6,9 @@
 
 opensearchHosts: "https://opensearch-cluster-data.opensearch.svc.cluster.local:9200"
 
+opensearchAccount:
+  secret: "opensearch-admin-secret"
+
 config:
   opensearch_dashboards.yml:
     # Set the host to the correct internal service
@@ -27,16 +30,3 @@ resources:
     cpu: 500m
     memory: 512Mi
 
-# Security Configuration (If your cluster requires internal mTLS or username/pass)
-# If OpenSearch requires authentication, you must configure a secret mount here.
-# For simplicity, we are assuming internal K8s traffic is authenticated via Istio mTLS.
-
-# In platform/logging/opensearch-dashboards-values.yaml
-
-# Inject the secret data as an environment variable
-extraEnvs:
-  - name: OPENSEARCH_ADMIN_PASSWORD
-    valueFrom:
-      secretKeyRef:
-        name: opensearch-admin-secret # The K8s Secret created by ESO
-        key: value                   # The key holding the password
