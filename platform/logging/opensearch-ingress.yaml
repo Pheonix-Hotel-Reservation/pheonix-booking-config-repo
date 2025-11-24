@@ -10,7 +10,7 @@ spec:
   hosts:
     - "opensearch.pheonix.live" # Public URL for the Dashboards
   gateways:
-    - istio-system/istio-ingressgateway # Use your main Istio Ingress Gateway
+    - istio-system/main-gateway # Use your main Istio Ingress Gateway
   http:
   - route:
     - destination:
