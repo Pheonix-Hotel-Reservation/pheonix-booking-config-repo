@@ -14,7 +14,7 @@ config:
     # CRITICAL: Configure the pod to use the injected ENV VAR for Basic Auth
     opensearch.requestHeadersAllowlist: [ "Authorization" ]
     opensearch.username: "admin"
-    opensearch.password: ${OPENSEARCH_ADMIN_PASSWORD} # <-- This is the secure reference
+    # opensearch.password: ${OPENSEARCH_ADMIN_PASSWORD} # <-- This is the secure reference
 
     opensearch.ssl.verificationMode: none
 
