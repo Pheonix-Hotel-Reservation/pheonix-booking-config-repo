@@ -1,0 +1,44 @@
+# path: platform/logging/opensearch-values.yaml
+
+# Create a dedicated OpenSearch cluster
+clusterName: opensearch-cluster
+
+# CRITICAL: Explicitly disable the internal dashboards component to avoid conflicts
+# with the separate opensearch-dashboards application.
+dashboards:
+  enabled: false
+
+# Node Configuration
+nodeGroup: data
+masterNode: true
+dataNode: true
+clientNode: false
+
+# CRITICAL: Persistence (Storage for logs)
+persistence:
+  enabled: true
+  storageClass: "do-block-storage-retain" # DigitalOcean storage class
+  size: 10Gi 
+  
+# CRITICAL: Resource requests to avoid Insufficient CPU/Memory errors
+resources:
+  requests:
+    cpu: 500m
+    memory: 1Gi
+  limits:
+    cpu: 1000m
+    memory: 2Gi
+
+# CRITICAL: Inject the secure admin password from the K8s Secret created by ESO
+extraEnvs:
+  - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: opensearch-admin-secret # Name of the K8s Secret created by ESO
+        key: value                   # Key where ESO stores the password (as per ESO config)
+
+# Enable Istio sidecar health checks (optional but recommended)
+# readinessProbe:
+#  initialDelaySeconds: 15
+#  periodSeconds: 10
+#  timeoutSeconds: 5
