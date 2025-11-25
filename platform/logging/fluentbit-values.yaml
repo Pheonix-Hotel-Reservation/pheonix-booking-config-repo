@@ -1,5 +1,14 @@
 # path: platform/logging/fluentbit-values.yaml
 
+controller:
+  env:
+    - name: OPENSEARCH_PASS
+      valueFrom:
+        secretKeyRef:
+          name: opensearch-admin-# https://kubernetes.io/docs/concepts/configuration/secret/
+          key: password
+          
+
 # 1. DaemonSet Configuration
 daemonSet:
   # Enable DaemonSet mode
@@ -59,3 +68,5 @@ config:
         Time_Key            @timestamp
         Time_Key_Format     iso8601
         Suppress_Type_Name  On
+        HTTP_User           admin
+        HTTP_passwd         $OPENSEARCH_PASS
