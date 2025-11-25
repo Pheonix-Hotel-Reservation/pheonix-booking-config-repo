@@ -5,7 +5,11 @@ expose:
   ingress:
     enabled: false
   
-externalURL: https://registry.pheonix.live # Your external access domain
+  externalURL: https://registry.pheonix.live # Your external access domain
+  
+  hostnames:
+    ingress:
+      enabled: false
 
 # 1. Persistence Configuration
 # Adjust sizes as needed. Image storage is separate from the database.
