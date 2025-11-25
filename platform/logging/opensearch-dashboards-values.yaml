@@ -9,6 +9,15 @@ resources:
     cpu: 500m
     memory: 512Mi
 
+data_source:
+  enabled: true
+
+workspace:
+  enabled: true
+
+explore:
+  enabled: true
+
 extraEnvs:
   - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
     valueFrom:
