@@ -1,71 +1,85 @@
-# path: platform/logging/fluentbit-values.yaml
-
+# FluentBit Helm values
 controller:
   env:
     - name: OPENSEARCH_PASS
       valueFrom:
         secretKeyRef:
-          name: opensearch-admin-# https://kubernetes.io/docs/concepts/configuration/secret/
+          name: opensearch-admin-secret
           key: password
-          
 
-# 1. DaemonSet Configuration
-kind: DaemonSet
-
-hostNetwork: true
+daemonset:
+  enabled: true
+  # Remove hostNetwork - not needed and creates security risks
   
-  # Required to mount the host's filesystem for log access
-volumes:
-  - name: varlog
-    hostPath:
-      path: /var/log
-  - name: varlibdockercontainers
-    hostPath:
-      path: /var/lib/docker/containers
+service:
+  type: ClusterIP
+
+resources:
+  limits:
+    cpu: 200m
+    memory: 200Mi
+  requests:
+    cpu: 100m
+    memory: 100Mi
 
 volumeMounts:
   - name: varlog
     mountPath: /var/log
-  - name: varlibdockercontainers
-    mountPath: /var/lib/docker/containers
+    readOnly: true
+  - name: containerd
+    mountPath: /var/lib/containerd
     readOnly: true
 
-# 2. Log Configuration
+volumes:
+  - name: varlog
+    hostPath:
+      path: /var/log
+  - name: containerd
+    hostPath:
+      path: /var/lib/containerd
+
 config:
-  # Input Plugin (Tails logs from the host's log directory)
   inputs: |
     [INPUT]
-        Name             tail
-        Tag              kube.*
-        Path             /var/log/containers/*.log
-        Parser           cri
-        DB               /var/log/flb_kube.db
-        Mem_Buf_Limit    5MB
-        Skip_Long_Lines  On
+        Name                tail
+        Tag                 kube.*
+        Path                /var/log/containers/*.log
+        Parser              cri
+        DB                  /var/log/flb_kube.db
+        Mem_Buf_Limit       50MB
+        Skip_Long_Lines     On
+        Refresh_Interval    10
+        Rotate_Wait         30
 
-  # Filter Plugin (Enriches logs with K8s metadata)
   filters: |
     [FILTER]
         Name                kubernetes
         Match               kube.*
-        Kube_URL            https://kubernetes.default.svc.default.cluster.local:443
+        Kube_URL            https://kubernetes.default.svc:443
+        Kube_CA_File        /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
+        Kube_Token_File     /var/run/secrets/kubernetes.io/serviceaccount/token
         Kube_Tag_Prefix     kube.var.log.containers.
         Merge_Log           On
         Merge_Log_Key       log_processed
+        K8S-Logging.Parser  On
+        K8S-Logging.Exclude On
+        Annotations         Off
+        Labels              On
 
-  # Output Plugin (Sends logs to the OpenSearch cluster)
   outputs: |
     [OUTPUT]
         Name                opensearch
         Match               *
-        # CRITICAL: Target the verified OpenSearch API service (ClusterIP)
-        Host                opensearch-cluster-master.opensearch.svc.cluster.local 
+        Host                opensearch-cluster-master.opensearch.svc.cluster.local
         Port                9200
-        Index               kubernetes-logs
+        Index               kubernetes-logs-%Y.%m.%d
         Type                _doc
         Replace_Dots        On
-        Time_Key            @timestamp
-        Time_Key_Format     iso8601
-        Suppress_Type_Name  On
+        Retry_Limit         3
         HTTP_User           admin
-        HTTP_passwd         $OPENSEARCH_PASS
+        HTTP_passwd         ${OPENSEARCH_PASS}
+        tls                 On
+        tls.verify          Off
+        Suppress_Type_Name  On
+        Time_Key            @timestamp
+        Time_Key_Format     %Y-%m-%dT%H:%M:%S.%L%z
