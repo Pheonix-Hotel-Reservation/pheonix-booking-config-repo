@@ -4,7 +4,7 @@ controller:
     - name: OPENSEARCH_PASS
       valueFrom:
         secretKeyRef:
-          name: opensearch-admin-secret
+          name: opensearch-admin-password
           key: password
 
 daemonset:
