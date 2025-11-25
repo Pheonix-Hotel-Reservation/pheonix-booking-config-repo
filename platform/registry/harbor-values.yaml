@@ -1,18 +1,20 @@
 # platform/registry/harbor-values.yaml
 expose:
-  type: clusterIP  # Change from ingress to clusterIP
+  type: clusterIP
   clusterIP:
     name: harbor
     ports:
       httpPort: 80
       httpsPort: 443
-  # Explicitly disable ingress
-  ingress:
+  # Add required TLS configuration even though we're using clusterIP
+  tls:
     enabled: false
+    auto:
+      commonName: registry.pheonix.live  # This is what was missing
   
   externalURL: https://registry.pheonix.live
 
-# Explicitly disable at component level too
+# Explicitly disable ingress at all levels
 portal:
   ingress:
     enabled: false
@@ -33,7 +35,7 @@ notary:
     ingress:
       enabled: false
 
-# Rest of your config
+# Rest of your configuration
 persistence:
   enabled: true
   imageChartStorage:
