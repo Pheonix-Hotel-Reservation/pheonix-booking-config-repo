@@ -1,12 +1,39 @@
 # platform/registry/harbor-values.yaml
 expose:
-  type: ingress
+  type: clusterIP  # Change from ingress to clusterIP
+  clusterIP:
+    name: harbor
+    ports:
+      httpPort: 80
+      httpsPort: 443
+  # Explicitly disable ingress
   ingress:
-    enabled: false  # Disable Harbor's built-in ingress
+    enabled: false
+  
   externalURL: https://registry.pheonix.live
-  tls:
-    enabled: false  # Let Istio handle TLS
 
+# Explicitly disable at component level too
+portal:
+  ingress:
+    enabled: false
+
+core:
+  ingress:
+    enabled: false
+
+registry:
+  ingress:
+    enabled: false
+
+notary:
+  server:
+    ingress:
+      enabled: false
+  signer:
+    ingress:
+      enabled: false
+
+# Rest of your config
 persistence:
   enabled: true
   imageChartStorage:
@@ -21,8 +48,3 @@ database:
 
 redis:
   enabled: true
-
-# Optional: Disable internal TLS since Istio sidecars handle it
-internal:
-  tls:
-    enabled: false
