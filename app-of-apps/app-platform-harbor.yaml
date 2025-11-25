@@ -23,6 +23,8 @@ spec:
       targetRevision: main
       ref: values
       path: platform/harbor
+      directory:
+        include: harbor-ingress.yaml
 
   destination:
     server: https://kubernetes.default.svc
