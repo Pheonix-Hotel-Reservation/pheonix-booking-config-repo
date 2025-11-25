@@ -59,5 +59,3 @@ config:
         Time_Key            @timestamp
         Time_Key_Format     iso8601
         Suppress_Type_Name  On
-        # Protocol MUST be HTTP since OpenSearch is not serving TLS internally
-        Protocol            http
