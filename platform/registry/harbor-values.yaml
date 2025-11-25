@@ -1,0 +1,29 @@
+# platform/registry/harbor-values.yaml
+
+expose:
+  # CRITICAL: Disable the default integrated Nginx/HAProxy ingress and use Istio
+  ingress:
+    enabled: false
+  
+externalURL: https://registry.pheonix.live # Your external access domain
+
+# 1. Persistence Configuration
+# Adjust sizes as needed. Image storage is separate from the database.
+persistence:
+  enabled: true
+  imageChartStorage:
+    # Use your DigitalOcean StorageClass
+    storageClass: "do-block-storage-retain"
+    size: 5Gi # Large enough space for images
+  
+# 2. Database and Redis (Mandatory for production)
+database:
+  internal:
+    persistence:
+      storageClass: "do-block-storage-retain"
+      size: 2Gi
+redis:
+  enabled: true
+
+# 3. Security (Disabling internal TLS since Istio handles it)
+# We rely on Istio's sidecar to handle internal communication security.
