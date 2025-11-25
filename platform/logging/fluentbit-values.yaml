@@ -1,0 +1,63 @@
+# path: platform/logging/fluentbit-values.yaml
+
+# 1. DaemonSet Configuration
+daemonSet:
+  # Enable DaemonSet mode
+  enabled: true
+  hostNetwork: true
+  
+  # Required to mount the host's filesystem for log access
+  volumes:
+    - name: varlog
+      hostPath:
+        path: /var/log
+    - name: varlibdockercontainers
+      hostPath:
+        path: /var/lib/docker/containers
+  
+  volumeMounts:
+    - name: varlog
+      mountPath: /var/log
+    - name: varlibdockercontainers
+      mountPath: /var/lib/docker/containers
+      readOnly: true
+
+# 2. Log Configuration
+config:
+  # Input Plugin (Tails logs from the host's log directory)
+  inputs: |
+    [INPUT]
+        Name             tail
+        Tag              kube.*
+        Path             /var/log/containers/*.log
+        Parser           cri
+        DB               /var/log/flb_kube.db
+        Mem_Buf_Limit    5MB
+        Skip_Long_Lines  On
+
+  # Filter Plugin (Enriches logs with K8s metadata)
+  filters: |
+    [FILTER]
+        Name                kubernetes
+        Match               kube.*
+        Kube_URL            https://kubernetes.default.svc:443
+        Kube_Tag_Prefix     kube.var.log.containers.
+        Merge_Log           On
+        Merge_Log_Key       log_processed
+
+  # Output Plugin (Sends logs to the OpenSearch cluster)
+  outputs: |
+    [OUTPUT]
+        Name                opensearch
+        Match               *
+        # CRITICAL: Target the verified OpenSearch API service (ClusterIP)
+        Host                opensearch-cluster-master.opensearch.svc.cluster.local 
+        Port                9200
+        Index               kubernetes-logs
+        Type                _doc
+        Replace_Dots        On
+        Time_Key            @timestamp
+        Time_Key_Format     iso8601
+        Suppress_Type_Name  On
+        # Protocol MUST be HTTP since OpenSearch is not serving TLS internally
+        Protocol            http
