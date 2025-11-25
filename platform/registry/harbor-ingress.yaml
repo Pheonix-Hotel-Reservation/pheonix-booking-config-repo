@@ -1,37 +1,39 @@
-# platform/registry/harbor-ingress.yaml
-
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
   name: harbor-vs
-  namespace: harbor # Deployed in the harbor namespace
+  namespace: harbor 
 spec:
   hosts:
-    - "registry.pheonix.live" # The external domain for all Harbor access
+    - "registry.pheonix.live" 
   gateways:
-    - istio-ingress/main-gateway       # Also bind to Main for flexibility (if needed)
+    - istio-ingress/main-gateway
   http:
   
-  # 1. Route API Traffic (Docker CLI access on standard port 5000)
-  # This routes all standard registry requests to the registry component.
+  # 1. API PATHS (Highest Priority - MUST be defined first)
+  # Routes standard Docker CLI commands and Harbor core API calls to the core/registry.
   - match:
-    - port: 443
-      uri:
-        prefix: /v2
+    - uri:
+        prefix: /v2/
+    - uri:
+        prefix: /api/
+    - uri:
+        prefix: /service/
+    - uri:
+        prefix: /c/
     route:
     - destination:
-        host: harbor-registry.harbor.svc.cluster.local
+        host: harbor-core.harbor.svc.cluster.local
         port:
-          number: 5000 # Docker Registry API Port
-          
-  # 2. Route UI Traffic (Browser access on Port 80/443)
-  # This routes all general traffic and API access to the portal UI.
+          number: 80 # Route to the internal harbor-core service
+
+  # 2. UI PATH (Lowest Priority - Catch-all)
+  # Routes all other traffic (like hitting the root domain /) to the UI.
   - match:
-    - port: 443
-      uri:
+    - uri:
         prefix: /
     route:
     - destination:
         host: harbor-portal.harbor.svc.cluster.local
         port:
-          number: 80 # Harbor Portal HTTP Port
+          number: 80 # Route to the internal harbor-portal service

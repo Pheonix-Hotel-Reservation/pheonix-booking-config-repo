@@ -27,3 +27,12 @@ redis:
 
 # 3. Security (Disabling internal TLS since Istio handles it)
 # We rely on Istio's sidecar to handle internal communication security.
+
+portal:
+  ingress:
+    enabled: false
+
+# 2. Disable the Core/Registry Ingress
+registry:
+  ingress:
+    enabled: false
