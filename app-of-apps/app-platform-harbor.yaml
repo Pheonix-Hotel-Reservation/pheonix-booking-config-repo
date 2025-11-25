@@ -22,6 +22,7 @@ spec:
     - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
       targetRevision: main
       ref: values
+      path: platform/harbor
 
   destination:
     server: https://kubernetes.default.svc
