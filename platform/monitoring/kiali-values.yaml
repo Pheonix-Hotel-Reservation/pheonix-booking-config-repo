@@ -8,6 +8,9 @@ external_services:
     # CRITICAL: Point Kiali to your running Prometheus service FQDN
     url: http://monitoring-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090
 
+  grafana:
+    url: http://monitoring-stack-grafana:80
+
 # 2. Authentication (Use standard token auth)
 auth:
   strategy: token # Recommended for production clusters
