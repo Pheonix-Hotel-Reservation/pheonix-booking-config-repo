@@ -9,3 +9,9 @@ resources:
     cpu: 500m
     memory: 512Mi
 
+extraEnvs:
+  - name: OPENSEARCH_INITIAL_ADMIN_PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: opensearch-admin-secret
+        key: password
