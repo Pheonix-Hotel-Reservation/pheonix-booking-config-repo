@@ -6,7 +6,7 @@ external_services:
     enabled: true
   prometheus:
     # CRITICAL: Point Kiali to your running Prometheus service FQDN
-    url: http://prometheus-kube-prometheus-stack.monitoring.svc.cluster.local:9090
+    url: http://monitoring-stack-kube-prom-prometheus.monitoring.svc.cluster.local:9090
 
 # 2. Authentication (Use standard token auth)
 auth:
