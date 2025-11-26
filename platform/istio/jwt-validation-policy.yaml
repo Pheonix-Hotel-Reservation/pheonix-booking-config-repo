@@ -1,0 +1,20 @@
+apiVersion: security.istio.io/v1beta1
+kind: RequestAuthentication
+metadata:
+  name: jwt-validation-policy
+  namespace: istio-ingress # Deploy where the Ingress Gateway resides
+spec:
+  selector:
+    # CRITICAL: This targets the shared Envoy proxy workload
+    matchLabels:
+      istio: ingress 
+  jwtRules:
+  - issuer: "https://<YOUR_IDP_DOMAIN>/realms/phoenix" 
+    jwksUri: "https://<YOUR_IDP_DOMAIN>/realms/phoenix/protocol/openid-connect/certs" # REPLACE with your IdP's public key endpoint
+    
+    # These claims are extracted and attached to the request headers for AuthorizationPolicy to use
+    outputClaimToHeaders:
+    - header: x-auth-user-id
+      claim: sub 
+    - header: x-auth-user-email
+      claim: email
