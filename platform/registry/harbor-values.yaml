@@ -1,4 +1,7 @@
 # platform/registry/harbor-values.yaml
+
+externalURL: https://registry.pheonix.live
+
 expose:
   type: clusterIP
   clusterIP:
@@ -12,7 +15,6 @@ expose:
     auto:
       commonName: registry.pheonix.live  # This is what was missing
   
-  externalURL: https://registry.pheonix.live
 
 # Explicitly disable ingress at all levels
 portal:

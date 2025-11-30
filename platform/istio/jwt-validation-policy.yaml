@@ -9,8 +9,8 @@ spec:
     matchLabels:
       istio: ingress 
   jwtRules:
-  - issuer: "https://<YOUR_IDP_DOMAIN>/realms/phoenix" 
-    jwksUri: "https://<YOUR_IDP_DOMAIN>/realms/phoenix/protocol/openid-connect/certs" # REPLACE with your IdP's public key endpoint
+  - issuer: "https://api.asgardeo.io/t/laminarflowai/oauth2/token" 
+    jwksUri: "https://api.asgardeo.io/t/laminarflowai/oauth2/jwks" # REPLACE with your IdP's public key endpoint
     
     # These claims are extracted and attached to the request headers for AuthorizationPolicy to use
     outputClaimToHeaders:
@@ -18,3 +18,5 @@ spec:
       claim: sub 
     - header: x-auth-user-email
       claim: email
+    - header: x-auth-user-groups
+      claim: groups
