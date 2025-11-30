@@ -1,0 +1,16 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: bypass-jwt-for-harbor
+  namespace: istio-ingress 
+spec:
+  selector:
+    matchLabels:
+      istio: ingress # Targets the shared Envoy proxy workload
+  action: ALLOW
+  rules:
+  - to:
+    - operation:
+        methods: ["*"]
+        # CRITICAL: Match only the Harbor domain
+        hosts: ["registry.pheonix.live"]
