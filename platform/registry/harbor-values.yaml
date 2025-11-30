@@ -1,43 +1,20 @@
 # platform/registry/harbor-values.yaml
-
-externalURL: https://registry.pheonix.live
-
 expose:
-  type: clusterIP
-  clusterIP:
-    name: harbor
-    ports:
-      httpPort: 80
-      httpsPort: 443
-  # Add required TLS configuration even though we're using clusterIP
+  ingress:
+    enabled: true 
+    hosts:
+      # Use your external domain for the NGINX Ingress host rule
+      core: registry.pheonix.live 
+      
+  # CRITICAL: Define the service type for the NGINX controller
+  controller:
+    service:
+      type: LoadBalancer # Requests a cloud Load Balancer from DigitalOcean
+      
+  # 3. Disables TLS handling in the chart, relying on K8s Secret (Cert-Manager)
   tls:
     enabled: false
-    auto:
-      commonName: registry.pheonix.live  # This is what was missing
-  
 
-# Explicitly disable ingress at all levels
-portal:
-  ingress:
-    enabled: false
-
-core:
-  ingress:
-    enabled: false
-
-registry:
-  ingress:
-    enabled: false
-
-notary:
-  server:
-    ingress:
-      enabled: false
-  signer:
-    ingress:
-      enabled: false
-
-# Rest of your configuration
 persistence:
   enabled: true
   imageChartStorage:
