@@ -20,7 +20,3 @@ spec:
       claim: email
     - header: x-auth-user-groups
       claim: groups
-
-    hosts:
-      - "phoenix-staging.pheonix.live"
-      - "pheonix.live"
