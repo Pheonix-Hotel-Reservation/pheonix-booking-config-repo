@@ -20,3 +20,7 @@ spec:
       claim: email
     - header: x-auth-user-groups
       claim: groups
+  
+  when:
+  - key: request.headers[host]
+    values: ["staging.pheonix.live", "pheonix.live"]
