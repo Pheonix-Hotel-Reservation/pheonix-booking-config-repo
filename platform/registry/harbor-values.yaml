@@ -1,21 +1,19 @@
 # platform/registry/harbor-values.yaml
 expose:
-  type: ingress
-  ingress:
-    enabled: true 
-    hosts:
-      # Use your external domain for the NGINX Ingress host rule
-      core: registry.pheonix.live 
-      registry: registry.pheonix.live
-    annotations:
-      nginx.ingress.kubernetes.io/ssl-ridirect: "false"
-      nginx.ingress.kubernetes.io/proxy-body-size: "0"
-      nginx.ingress.kubrenetes.io/proxy-read-timeout: "600"
-      nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
-      
-  # 3. Disables TLS handling in the chart, relying on K8s Secret (Cert-Manager)
+  type: loadBalancer  # Using LoadBalancer since you want direct access
   tls:
-    enabled: false
+    enabled: false  # Disable TLS for now to simplify setup
+  loadBalancer:
+    # Configure the LoadBalancer service
+    name: harbor
+    # If you want to specify a static IP, uncomment and set:
+    # IP: "your-static-ip"
+    
+# CRITICAL: This was missing from your config!
+externalURL: http://registry.pheonix.live
+
+# Admin password configuration
+harborAdminPassword: "Harbor@12345"
 
 persistence:
   enabled: true
@@ -26,7 +24,7 @@ persistence:
 database:
   internal:
     persistence:
-      storageClass: "do-block-storage-retain" 
+      storageClass: "do-block-storage-retain"
       size: 2Gi
 
 redis:
