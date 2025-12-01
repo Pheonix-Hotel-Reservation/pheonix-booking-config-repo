@@ -1,15 +1,17 @@
 # platform/registry/harbor-values.yaml
 expose:
+  type: ingress
   ingress:
     enabled: true 
     hosts:
       # Use your external domain for the NGINX Ingress host rule
       core: registry.pheonix.live 
-      
-  # CRITICAL: Define the service type for the NGINX controller
-  controller:
-    service:
-      type: LoadBalancer # Requests a cloud Load Balancer from DigitalOcean
+      registry: registry.pheonix.live
+    annotations:
+      nginx.ingress.kubernetes.io/ssl-ridirect: "false"
+      nginx.ingress.kubernetes.io/proxy-body-size: "0"
+      nginx.ingress.kubrenetes.io/proxy-read-timeout: "600"
+      nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
       
   # 3. Disables TLS handling in the chart, relying on K8s Secret (Cert-Manager)
   tls:
