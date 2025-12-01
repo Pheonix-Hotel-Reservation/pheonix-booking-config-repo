@@ -5,25 +5,25 @@ expose:
     enabled: true
     certSource: secret
     secret:
-      secretName: "harbor-registry-tls"  # Your existing certificate
-      notarySecretName: "harbor-registry-tls"  # Use the same cert for notary
+      secretName: "harbor-registry-tls"
+      notarySecretName: "harbor-registry-tls"
   loadBalancer:
     name: harbor
 
-externalURL: https://registry.pheonix.live  # Changed to https
+externalURL: https://registry.pheonix.live
 
 harborAdminPassword: "Harbor@12345"
 
 persistence:
   enabled: true
   imageChartStorage:
-    storageClass: "do-block-storage-retain"
+    storageClass: "do-block-storage"  # Changed to match existing PVCs
     size: 5Gi
 
 database:
   internal:
     persistence:
-      storageClass: "do-block-storage-retain"
+      storageClass: "do-block-storage"  # Changed to match existing PVCs
       size: 2Gi
 
 redis:
