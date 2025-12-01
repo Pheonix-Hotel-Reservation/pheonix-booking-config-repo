@@ -1,18 +1,17 @@
 # platform/registry/harbor-values.yaml
 expose:
-  type: loadBalancer  # Using LoadBalancer since you want direct access
+  type: loadBalancer
   tls:
-    enabled: false  # Disable TLS for now to simplify setup
+    enabled: true
+    certSource: secret
+    secret:
+      secretName: "harbor-registry-cert"  # Your existing certificate
+      notarySecretName: "harbor-registry-cert"  # Use the same cert for notary
   loadBalancer:
-    # Configure the LoadBalancer service
     name: harbor
-    # If you want to specify a static IP, uncomment and set:
-    # IP: "your-static-ip"
-    
-# CRITICAL: This was missing from your config!
-externalURL: http://registry.pheonix.live
 
-# Admin password configuration
+externalURL: https://registry.pheonix.live  # Changed to https
+
 harborAdminPassword: "Harbor@12345"
 
 persistence:
