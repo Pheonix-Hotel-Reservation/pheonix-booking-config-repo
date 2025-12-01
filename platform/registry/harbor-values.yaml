@@ -5,8 +5,8 @@ expose:
     enabled: true
     certSource: secret
     secret:
-      secretName: "harbor-registry-cert"  # Your existing certificate
-      notarySecretName: "harbor-registry-cert"  # Use the same cert for notary
+      secretName: "harbor-registry-tls"  # Your existing certificate
+      notarySecretName: "harbor-registry-tls"  # Use the same cert for notary
   loadBalancer:
     name: harbor
 
