@@ -34,7 +34,7 @@ spec:
         # Source 2: The Base Helm Chart (The Application Code)
         # The 'path' points to the specific service folder found by the generator.
         - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-          targetRevision: main
+          revsion: main
           path: '{{path}}' # e.g., apps/user-service
           helm:
             # CRITICAL: Define the loading order for environment overrides
