@@ -1,0 +1,8 @@
+# apps/user-service/Chart.yaml
+
+apiVersion: v2
+name: user-service
+description: Base Helm chart for the Phoenix Booking User Microservice.
+type: application
+version: 0.1.0 # The version of this chart TEMPLATE structure
+appVersion: "1.20.4" # Optional: Version of the application code (Can be removed if only using values.yaml)
