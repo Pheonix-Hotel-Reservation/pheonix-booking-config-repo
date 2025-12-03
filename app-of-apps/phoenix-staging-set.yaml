@@ -33,7 +33,7 @@ spec:
           ref: values
         
         # Source 2: The Base Helm Chart (The Consumer)
-        - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheenox-booking-config-repo.git'
+        - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
           targetRevision: main
           path: '{{path}}'
           helm:
