@@ -18,25 +18,28 @@ spec:
         # VAULT AGENT INJECTOR ANNOTATIONS
         # ----------------------------------------------------
         vault.hashicorp.com/agent-inject: "true"
-        vault.hashicorp.com/role: "user-role" # Binds to the Role created in Vault
-        vault.hashicorp.com/secret-volume-path: "/vault/secrets"
+        vault.hashicorp.com/role: "user-role"
+        vault.hashicorp.com/secret-volume-path: "/vault/secrets" 
         
         # Define the Secret Path and target file (db-creds.env)
         vault.hashicorp.com/agent-inject-secret-db-creds.env: "secret/data/user-service/database"
         
         # Define the template for the secret file content
         vault.hashicorp.com/agent-inject-template-db-creds.env: |
+          # The file will be created in standard KEY=VALUE format for easy parsing.
           {{- with secret "secret/data/user-service/database" }}
-          SPRING_DATASOURCE_USERNAME="{{ .Data.data.username }}"
-          SPRING_DATASOURCE_PASSWORD="{{ .Data.data.password }}"
-          DB_HOST="{{ .Data.data.host }}"
+          NODE_DB_USERNAME={{ .Data.data.username }}
+          NODE_DB_PASSWORD={{ .Data.data.password }}
+          DB_HOST={{ .Data.data.host }}
+          DB_PORT=5432
           {{- end }}
         
         # ----------------------------------------------------
-        # ISTIO / GENERAL ANNOTATIONS
+        # ISTIO / PROMETHEUS ANNOTATIONS
         # ----------------------------------------------------
-        prometheus.io/scrape: "true" # Enables Prometheus scraping via Istio sidecar
-        prometheus.io/port: "8080"
+        prometheus.io/scrape: "true"
+        # FIX: Ensure Prometheus port matches the service port defined in values.yaml
+        prometheus.io/port: "{{ .Values.service.port }}" 
         
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
@@ -47,3 +50,6 @@ spec:
           {{ toYaml .Values.resources | nindent 12 }}
         ports:
         - containerPort: {{ .Values.service.port }}
+        
+        # CRITICAL FIX: The Node.js process MUST read the secret as a file.
+        # It should NOT use 'envFrom' or rely on shell sourcing.

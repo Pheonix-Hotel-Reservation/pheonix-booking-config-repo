@@ -1,0 +1,48 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: phoenix-production-set
+  namespace: argocd
+spec:
+  # Generator remains the same (finds apps/*)
+  generators:
+  - git:
+      repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
+      targetRevision: main
+      directories:
+      - path: apps/*
+
+  template:
+    metadata:
+      name: 'phoenix-production-{{path.basename}}'
+      annotations:
+        argocd.argoproj.io/sync-wave: "10"
+    spec:
+      project: default
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: phoenix-production
+      sources:
+        # Source A: Git Repo (Value Provider)
+        - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
+          targetRevision: main
+          ref: values
+        
+        # Source B: The Helm Chart & Environment Overlays
+        - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
+          targetRevision: main
+          path: '{{path}}'
+          helm:
+            valueFiles:
+              # 1. Load the Base Defaults (Lowest Priority)
+              - '{{path.basename}}/values.yaml'
+              # 2. Load the Service-Specific Production Overrides (Highest Priority - WINS)
+              # Example: Loads environments/production/user-service-config.yaml
+              - 'environments/production/{{path.basename}}-config.yaml' # <--- CORRECTED LOGIC
+
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - ServerSideApply=true

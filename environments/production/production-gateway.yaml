@@ -1,0 +1,28 @@
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: production-gateway
+  namespace: istio-ingress
+spec:
+  selector:
+    istio: ingress
+  servers:
+  - port:
+      number: 80
+      name: http-prod
+      protocol: HTTP
+    hosts:
+      - "pheonix-production.pheonix.live"
+      - "prod.pheonix.live" # Include root/simplified production host
+    tls:
+      httpsRedirect: true
+  - port:
+      number: 443
+      name: https-prod
+      protocol: HTTPS
+    hosts:
+      - "pheonix-production.pheonix.live"
+      - "*.pheonix.live" # Wildcard cert is required here
+    tls:
+      mode: SIMPLE
+      credentialName: pheonix-live-tls # Uses your existing wildcard certificate
