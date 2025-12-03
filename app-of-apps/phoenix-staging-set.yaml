@@ -41,7 +41,7 @@ spec:
               # 1. Load the Base Defaults (Correct: Simple relative path)
               - 'values.yaml'
               # 2. Load the Staging Overlays 
-              - 'environments/staging/{{path.basename}}.yaml'
+              - '$values/environments/staging/{{path.basename}}.yaml'
 
       syncPolicy:
         automated:
