@@ -40,9 +40,9 @@ spec:
             # CRITICAL: Define the loading order for environment overrides
             valueFiles:
               # 1. Load the Base Defaults (Lowest Priority)
-              - '{{path}}/values.yaml'
+              - 'values.yaml'
               # 2. Load the Staging Overlays (Highest Priority - Overwrites base)
-              - 'environments/staging/{{path.basename}}-config.yaml'
+              - 'environments/staging/{{path.basename}}.yaml'
 
       syncPolicy:
         automated:
