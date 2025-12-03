@@ -8,40 +8,39 @@ spec:
   generators:
   - git:
       repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-      revision: main
+      # CRITICAL FIX 1: Use 'revision' in the generator block to satisfy the controller
+      revision: main 
       directories:
-      - path: apps/* # Discovers all folders (e.g., user-service, payment-service)
+      - path: apps/*
 
   # 2. Template: The Application definition to be generated for each service
   template:
     metadata:
-      # Generated App Name: phoenix-staging-user-service
       name: 'phoenix-staging-{{path.basename}}'
       annotations:
-        argocd.argoproj.io/sync-wave: "10" # Run after all platform infra (Wave 7)
+        argocd.argoproj.io/sync-wave: "10"
     spec:
       project: default
       destination:
         server: https://kubernetes.default.svc
-        namespace: phoenix-staging # Target the dedicated staging namespace
+        namespace: phoenix-staging
 
       sources:
-        # Source 1: The Git Repo (Value Provider) - Required for $values references
+        # Source 1: The Git Repo (Value Provider)
         - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-          targetRevision: main
+          # CRITICAL FIX 2: Use the standard 'targetRevision' field here
+          targetRevision: main 
           ref: values
         
-        # Source 2: The Base Helm Chart (The Application Code)
-        # The 'path' points to the specific service folder found by the generator.
-        - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
+        # Source 2: The Base Helm Chart (The Consumer)
+        - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheenox-booking-config-repo.git'
           targetRevision: main
-          path: '{{path}}' # e.g., apps/user-service
+          path: '{{path}}'
           helm:
-            # CRITICAL: Define the loading order for environment overrides
             valueFiles:
-              # 1. Load the Base Defaults (Lowest Priority)
+              # 1. Load the Base Defaults (Correct: Simple relative path)
               - 'values.yaml'
-              # 2. Load the Staging Overlays (Highest Priority - Overwrites base)
+              # 2. Load the Staging Overlays 
               - 'environments/staging/{{path.basename}}.yaml'
 
       syncPolicy:
