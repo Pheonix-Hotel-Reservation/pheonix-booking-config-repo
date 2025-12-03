@@ -25,14 +25,15 @@ spec:
         vault.hashicorp.com/agent-inject-secret-db-creds.env: "secret/data/user-service/database"
         
         # Define the template for the secret file content
+        # CRITICAL FIX: Escape the Vault template syntax
         vault.hashicorp.com/agent-inject-template-db-creds.env: |
           # The file will be created in standard KEY=VALUE format for easy parsing.
-          {{- with secret "secret/data/user-service/database" }}
-          NODE_DB_USERNAME={{ .Data.data.username }}
-          NODE_DB_PASSWORD={{ .Data.data.password }}
-          DB_HOST={{ .Data.data.host }}
+          {{`{{- with secret "secret/data/user-service/database" }}`}}
+          NODE_DB_USERNAME={{`{{ .Data.data.username }}`}}
+          NODE_DB_PASSWORD={{`{{ .Data.data.password }}`}}
+          DB_HOST={{`{{ .Data.data.host }}`}}
           DB_PORT=5432
-          {{- end }}
+          {{`{{- end }}`}}
         
         # ----------------------------------------------------
         # ISTIO / PROMETHEUS ANNOTATIONS
