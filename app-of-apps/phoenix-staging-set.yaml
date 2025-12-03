@@ -28,13 +28,13 @@ spec:
       sources:
         # Source 1: The Git Repo (Value Provider) - Required for $values references
         - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-          revsion: main
+          revision: main
           ref: values
         
         # Source 2: The Base Helm Chart (The Application Code)
         # The 'path' points to the specific service folder found by the generator.
         - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-          revsion: main
+          revision: main
           path: '{{path}}' # e.g., apps/user-service
           helm:
             # CRITICAL: Define the loading order for environment overrides
