@@ -1,5 +1,5 @@
 {{- $vaultTemplate := `{{- with secret "kv/data/secret/data/user-service/database" -}}
-MONGODB_URI={{ .Data.data.MONGODB_URI }}
+MONGODB_URI={{ .Data.MONGODB_URI }}
 {{- end -}}` }}
 
 apiVersion: apps/v1
