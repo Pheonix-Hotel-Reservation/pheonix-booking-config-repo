@@ -1,0 +1,30 @@
+# apps/rabbitmq/values.yaml
+
+# Override settings for the official Bitnami RabbitMQ chart (aliased as rabbitmq-broker)
+rabbitmq-broker:
+  
+  # CRITICAL: Persistence (Mandatory for message durability)
+  persistence:
+    enabled: true
+    storageClass: "do-block-storage-retain" # Your DigitalOcean storage class
+    size: 5Gi 
+
+  # Resource limits (RabbitMQ is memory-intensive)
+  resources:
+    requests:
+      memory: 512Mi
+      cpu: 250m
+    limits:
+      memory: 1Gi
+      cpu: 500m
+
+  # Enable the Management Plugin for the UI
+  auth:
+    enabled: true
+  
+  rabbitmq:
+    # Set the standard client and management ports
+    service:
+      ports:
+        amqp: 5672
+        http: 15672

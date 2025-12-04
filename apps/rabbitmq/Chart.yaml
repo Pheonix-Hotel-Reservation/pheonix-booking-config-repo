@@ -1,0 +1,11 @@
+apiVersion: v2
+name: rabbitmq
+description: Wrapper chart for the RabbitMQ message broker.
+type: application
+version: 0.1.0 # Version of your wrapper chart
+
+dependencies:
+  - name: rabbitmq
+    version: 16.0.14 # Use a stable, recent version of the official chart
+    repository: "https://charts.bitnami.com/bitnami" # The official chart repository
+    alias: rabbitmq-broker # Give it a unique alias

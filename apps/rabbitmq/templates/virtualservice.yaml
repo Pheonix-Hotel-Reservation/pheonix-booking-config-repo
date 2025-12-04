@@ -1,0 +1,29 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: rabbitmq-vs
+  # Namespace is determined by the ApplicationSet deployment (e.g., phoenix-staging)
+spec:
+  hosts:
+    - "rabbitmq.{{ .Release.Namespace }}.pheonix.live" # e.g., rabbitmq.phoenix-staging.pheonix.live
+  gateways:
+    - istio-ingress/staging-gateway
+  http:
+  # Enforce redirect for all traffic
+  - match:
+    - uri:
+        prefix: /
+      port: 80
+    redirect:
+      scheme: https
+      port: 443
+  # Route HTTPS to the Management UI port (15672)
+  - match:
+    - uri:
+        prefix: /
+    route:
+    - destination:
+        # FQDN of the service created by the dependency chart
+        host: rabbitmq-broker-rabbitmq.{{ .Release.Namespace }}.svc.cluster.local 
+        port:
+          number: 15672

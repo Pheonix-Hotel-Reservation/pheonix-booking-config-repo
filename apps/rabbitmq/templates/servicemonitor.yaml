@@ -1,0 +1,16 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: rabbitmq
+  labels:
+    release: monitoring-stack # Targets your Prometheus instance
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: rabbitmq
+      app.kubernetes.io/instance: rabbitmq-broker 
+  endpoints:
+  - port: http-metrics # Standard port name used by the dependency chart
+    path: /metrics
+    interval: 30s
+    scheme: http # Internal traffic (no Istio sidecar)
