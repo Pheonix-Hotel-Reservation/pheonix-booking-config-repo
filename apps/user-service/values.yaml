@@ -4,7 +4,8 @@ image:
   repository: registry.pheonix.live/phoenix-booking/user-service # Uses your new registry
   tag: "v1.0.0"
 
-  imagePullSecret:
+  
+imagePullSecret:
   # Provide a default name here. It will be overridden, but prevents the crash.
   name: "harbor-pull-secret"
 
