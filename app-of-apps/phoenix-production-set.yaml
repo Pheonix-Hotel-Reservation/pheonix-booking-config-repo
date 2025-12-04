@@ -35,10 +35,10 @@ spec:
           helm:
             valueFiles:
               # 1. Load the Base Defaults (Lowest Priority)
-              - '{{path.basename}}/values.yaml'
+              - 'values.yaml'
               # 2. Load the Service-Specific Production Overrides (Highest Priority - WINS)
-              # Example: Loads environments/production/user-service-config.yaml
-              - 'environments/production/{{path.basename}}-config.yaml' # <--- CORRECTED LOGIC
+              # Example: Loads environments/production/user-service.yaml
+              - '$values/environments/production/{{path.basename}}.yaml' # <--- CORRECTED LOGIC
 
       syncPolicy:
         automated:
