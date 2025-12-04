@@ -12,7 +12,7 @@ spec:
     targetRevision: main
     path: environments/production
     directory:
-      include: '{production-gateway.yaml,production-router-vs.yaml}'
+      include: '{production-gateway.yaml,production-router-vs.yaml,production-request-authentication.yaml}'
   destination:
     server: https://kubernetes.default.svc
     namespace: phoenix-production
