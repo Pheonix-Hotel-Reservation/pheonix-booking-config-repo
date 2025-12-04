@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -15,36 +14,21 @@ spec:
       labels:
         app: user-service
       annotations:
-        # ----------------------------------------------------
-        # VAULT AGENT INJECTOR ANNOTATIONS
-        # ----------------------------------------------------
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/role: "user-role"
         vault.hashicorp.com/secret-volume-path: "/vault/secrets" 
-        
-        # Define the Secret Path and target file (db-creds.env)
         vault.hashicorp.com/agent-inject-secret-db-creds.env: "secret/data/user-service/database"
-        
-        # Define the template for the secret file content
         vault.hashicorp.com/agent-inject-template-db-creds.env: |
-          # MongoDB connection URI for the user service
-          {{`{{- with secret "secret/data/user-service/database" }}`}}
-          MONGODB_URI=mongodb://{{`{{ .Data.data.username }}`}}:{{`{{ .Data.data.password }}`}}@{{`{{ .Data.data.host }}`}}:{{`{{ .Data.data.port | default "27017" }}`}}/phoenix-user-service
-          {{`{{- end }}`}}
-        
-        # ----------------------------------------------------
-        # ISTIO / PROMETHEUS ANNOTATIONS
-        # ----------------------------------------------------
+          {`{{- with secret "secret/data/user-service/database" }}`}}
+          MONGODB_URI=mongodb://{`{{ .Data.data.username }}`}}:{`{{ .Data.data.password }}`}}@{`{{ .Data.data.host }}`}}:{`{{ .Data.data.port | default "27017" }}`}}/phoenix-user-service
+          {`{{- end }}`}}
         prometheus.io/scrape: "true"
-        # FIX: Ensure Prometheus port matches the service port defined in values.yaml
         prometheus.io/port: "{{ .Values.service.port }}" 
         
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
-
       imagePullSecrets:
         - name: {{ .Values.imagePullSecret.name }}
-
       containers:
       - name: user-service
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
@@ -53,24 +37,15 @@ spec:
         ports:
         - containerPort: {{ .Values.service.port }}
         
-        # Environment variables loaded from Vault secret file
         env:
         - name: NODE_ENV
           value: {{ .Values.environment | default "staging" | quote }}
         
-        # Volume mount for Vault secrets
-        volumeMounts:
-        - name: vault-secrets
-          mountPath: /vault/secrets
-          readOnly: true
-        
-        # Load environment variables from the Vault-generated file
         envFrom:
         - configMapRef:
             name: user-service-config
             optional: true
         
-        # Readiness and liveness probes
         readinessProbe:
           httpGet:
             path: /health
@@ -85,21 +60,3 @@ spec:
           initialDelaySeconds: 45
           periodSeconds: 30
       
-      # Init container to source environment variables from Vault file
-      initContainers:
-      - name: vault-env-setup
-        image: busybox:1.35
-        command:
-        - /bin/sh
-        - -c
-        - |
-          echo "Waiting for Vault secret file..."
-          while [ ! -f /vault/secrets/db-creds.env ]; do
-            sleep 2
-          done
-          echo "Vault secrets loaded successfully"
-          cat /vault/secrets/db-creds.env
-        volumeMounts:
-        - name: vault-secrets
-          mountPath: /vault/secrets
-          readOnly: true
