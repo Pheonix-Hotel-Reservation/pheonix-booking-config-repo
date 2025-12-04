@@ -23,13 +23,13 @@ spec:
         vault.hashicorp.com/secret-volume-path: "/vault/secrets" 
         
         # Define the Secret Path and target file (db-creds.env)
-        vault.hashicorp.com/agent-inject-secret-db-creds.env: "kv/data/secret/data/user-service/database"
+        vault.hashicorp.com/agent-inject-secret-db-creds: "kv/data/secret/data/user-service/database"
         
         # Define the template for the secret file content
-        vault.hashicorp.com/agent-inject-template-db-creds.env: |
-          {{`{{- with secret "kv/secret/data/user-service/database" }}
-          MONGODB_URI='{{ .Data.data.MONGODB_URI }}'
-          {{- end }}`}}
+        vault.hashicorp.com/agent-inject-template-db-creds: |
+          {{- with secret "kv/data/secret/data/user-service/database" -}}
+          export MONGODB_URI="{{ .Data.data.MONGODB_URI }}"
+          {{- end }}
         
         # ----------------------------------------------------
         # ISTIO / PROMETHEUS ANNOTATIONS
@@ -55,8 +55,8 @@ spec:
           - |
             # Source the secret file to export MONGO_URI into the shell environment.
             # This is where the application reads the secret.
-            cat /vault/secrets/db-creds.env
-            . /vault/secrets/db-creds.env
+            cat /vault/secrets/db-creds
+            . /vault/secrets/db-creds
             
             echo "Vault secrets sourced. Starting Node service..."
 
