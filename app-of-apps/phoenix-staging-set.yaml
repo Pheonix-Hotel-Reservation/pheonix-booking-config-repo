@@ -31,6 +31,7 @@ spec:
           # CRITICAL FIX 2: Use the standard 'targetRevision' field here
           targetRevision: main 
           ref: values
+          path: $values/environments/staging
         
         # Source 2: The Base Helm Chart (The Consumer)
         - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
