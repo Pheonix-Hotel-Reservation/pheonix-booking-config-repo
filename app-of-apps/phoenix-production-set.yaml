@@ -8,7 +8,7 @@ spec:
   generators:
   - git:
       repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
-      targetRevision: main
+      revision: main
       directories:
       - path: apps/*
 
