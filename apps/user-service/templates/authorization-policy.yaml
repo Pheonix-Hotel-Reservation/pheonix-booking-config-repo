@@ -9,6 +9,11 @@ spec:
       app: user-service
   action: ALLOW
   rules:
+
+  - to:
+  - operation:
+      methods: ["GET"]
+      paths: ["/health", "/healthz", "/ready", "/alive", "/metrics"]
   
   # Rule 1: Admin-only access to GET /
   - from:
