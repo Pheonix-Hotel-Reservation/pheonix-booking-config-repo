@@ -19,7 +19,7 @@ spec:
     - destination:
         host: user-service.phoenix-staging.svc.cluster.local # Internal FQDN
         port:
-          number: 8080 # App's internal port
+          number: 3001 # App's internal port
   
   # 2. Route for Payment Service
   - match:
