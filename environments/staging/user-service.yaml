@@ -1,14 +1,9 @@
-# This file is loaded LAST by ArgoCD.
-
-# We only define the fields we are overriding.
-user-service:
-  image:
-    # CRITICAL: This is the field GitHub Actions will update to the latest SHA.
+# /environments/staging/user-service.yaml
+image:
   tag: "registry.pheonix.live/phoenix-staging/user-service@sha256:066506e00351d46b8e27d61389818822b9b3e6b194ba99674f541db0607eb03c"
 
-  imagePullSecret:
-    name: harbor-pull-secret
-  
-  # Example of other staging overrides:
-  replicaCount: 1
-  debugMode: true
+imagePullSecret:
+  name: harbor-pull-secret
+
+replicaCount: 1
+debugMode: true
