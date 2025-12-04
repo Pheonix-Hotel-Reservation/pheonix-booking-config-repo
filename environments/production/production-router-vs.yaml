@@ -1,13 +1,13 @@
 apiVersion: networking.istio.io/v1beta1
 kind: VirtualService
 metadata:
-  name: phoenix-staging-router
-  namespace: phoenix-staging # Deploy in the application namespace
+  name: phoenix-prodution-router
+  namespace: phoenix-production # Deploy in the application namespace
 spec:
   hosts:
-    - "pheonix-staging.pheonix.live"
+    - "pheonix.live"
   gateways:
-    - istio-ingress/staging-gateway # Binds to the new dedicated staging gateway
+    - istio-ingress/production-gateway # Binds to the new dedicated production gateway
   http:
   
   # 1. Route for User Service (Highest Priority: Specific Path Match)
