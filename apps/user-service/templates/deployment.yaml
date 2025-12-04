@@ -55,7 +55,7 @@ spec:
           - |
             # Source the secret file to export MONGO_URI into the shell environment.
             # This is where the application reads the secret.
-            cat /vault/secrets
+            ls -la /vault/secrets/
             . /vault/secrets/db-creds.env
             
             echo "Vault secrets sourced. Starting Node service..."
