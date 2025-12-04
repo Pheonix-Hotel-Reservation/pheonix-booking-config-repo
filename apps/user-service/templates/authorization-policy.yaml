@@ -2,7 +2,7 @@ apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: user-service-jwt-required
-  namespace: phoenix-staging
+  namespace: {{ .Release.Namespace }} 
 spec:
   selector:
     matchLabels:
@@ -10,25 +10,28 @@ spec:
   action: ALLOW
   rules:
   
-  # 1. ADMIN ACCESS (GET /api/user/* - e.g., viewing all users)
-  # This rule requires the token to have the specific 'admin' role claim.
+  # Rule 1: Admin-only access to GET /
   - from:
     - source:
-        requestPrincipals: ["*"] # Must be authenticated
+        requestPrincipals: ["*"]
     to:
     - operation:
         methods: ["GET"]
-        paths: ["/api/user/*"]
+        paths: ["/"]
     when:
-    - key: request.auth.claims[roles]
-      values: ["admin"] # Assuming your IdP places roles in a 'roles' claim
-      
-  # 2. SELF-SERVICE ACCESS (GET/POST /api/user/:id - The App performs the final 'id == sub' check)
+    - key: request.auth.claims[groups]
+      values: ["*admin*"]  # Matches any groups claim containing "admin"
+  
+  # Rule 2: Any authenticated user access to ID-based endpoints
   - from:
     - source:
-        requestPrincipals: ["*"] # Must be authenticated (any valid user)
+        requestPrincipals: ["*"]
     to:
     - operation:
-        methods: ["GET", "POST"]
-        # Allow any authenticated user to hit the specific resource path
-        paths: ["/api/user/*"]
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
+        # Matches paths like /123, /abc123, /user123/loyalty-points, etc.
+        # but NOT the root path /
+        paths: ["/*"]
+    when:
+    - key: request.url_path
+      notValues: ["/"]  # Exclude the root path from this rule
