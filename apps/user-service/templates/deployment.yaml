@@ -58,6 +58,9 @@ spec:
             . /vault/secrets/db-creds.env
             
             echo "Vault secrets sourced. Starting Node service..."
+
+            echo "NODE_ENV is set to: $NODE_ENV"
+            echo "MONGODB_URI is set to: $MONGODB_URI"
             
             # Execute the main application command (using 'exec' to replace the shell process)
             exec node services/user-service/src/index.js
