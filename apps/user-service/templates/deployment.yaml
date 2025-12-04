@@ -84,10 +84,6 @@ spec:
           initialDelaySeconds: 45
           periodSeconds: 30
       
-      volumes:
-      - name: vault-secrets
-        emptyDir: {}
-        
       # Init container to source environment variables from Vault file
       initContainers:
       - name: vault-env-setup
