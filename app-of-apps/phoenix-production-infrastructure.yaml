@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: phoenix-staging-infrastructure
+  name: phoenix-production-infrastructure
   namespace: argocd
   annotations:
     argocd.argoproj.io/sync-wave: "5"
