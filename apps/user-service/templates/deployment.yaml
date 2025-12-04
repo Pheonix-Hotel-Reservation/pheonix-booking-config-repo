@@ -1,4 +1,4 @@
-{{- $vaultTemplate := `{{- with secret "secret/data/user-service/database" -}}
+{{- $vaultTemplate := `{{- with secret "kv/data/secret/data/user-service/database" -}}
 MONGODB_URI={{ .Data.data.MONGODB_URI }}
 {{- end -}}` }}
 
