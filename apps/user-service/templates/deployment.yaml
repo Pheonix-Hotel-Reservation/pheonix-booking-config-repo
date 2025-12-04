@@ -26,7 +26,7 @@ spec:
         vault.hashicorp.com/secret-volume-path: "/vault/secrets" 
         
         # Define the Secret Path and target file (db-creds.env)
-        vault.hashicorp.com/agent-inject-secret-db-creds.env: "secret/data/user-service/database"
+        vault.hashicorp.com/agent-inject-secret-db-creds.env: "kv/data/secret/data/user-service/database"
         
         # Define the template for the secret file content
         vault.hashicorp.com/agent-inject-template-db-creds.env: {{ $vaultTemplate | quote }}
