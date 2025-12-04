@@ -25,14 +25,10 @@ spec:
         vault.hashicorp.com/agent-inject-secret-db-creds.env: "secret/data/user-service/database"
         
         # Define the template for the secret file content
-        # CRITICAL FIX: Escape the Vault template syntax
         vault.hashicorp.com/agent-inject-template-db-creds.env: |
-          # The file will be created in standard KEY=VALUE format for easy parsing.
+          # MongoDB connection URI for the user service
           {{`{{- with secret "secret/data/user-service/database" }}`}}
-          NODE_DB_USERNAME={{`{{ .Data.data.username }}`}}
-          NODE_DB_PASSWORD={{`{{ .Data.data.password }}`}}
-          DB_HOST={{`{{ .Data.data.host }}`}}
-          DB_PORT=5432
+          MONGODB_URI=mongodb://{{`{{ .Data.data.username }}`}}:{{`{{ .Data.data.password }}`}}@{{`{{ .Data.data.host }}`}}:{{`{{ .Data.data.port | default "27017" }}`}}/phoenix-user-service
           {{`{{- end }}`}}
         
         # ----------------------------------------------------
@@ -52,5 +48,57 @@ spec:
         ports:
         - containerPort: {{ .Values.service.port }}
         
-        # CRITICAL FIX: The Node.js process MUST read the secret as a file.
-        # It should NOT use 'envFrom' or rely on shell sourcing.
+        # Environment variables loaded from Vault secret file
+        env:
+        - name: NODE_ENV
+          value: {{ .Values.environment | default "staging" | quote }}
+        
+        # Volume mount for Vault secrets
+        volumeMounts:
+        - name: vault-secrets
+          mountPath: /vault/secrets
+          readOnly: true
+        
+        # Load environment variables from the Vault-generated file
+        envFrom:
+        - configMapRef:
+            name: user-service-config
+            optional: true
+        
+        # Readiness and liveness probes
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.service.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.service.port }}
+          initialDelaySeconds: 45
+          periodSeconds: 30
+      
+      volumes:
+      - name: vault-secrets
+        emptyDir: {}
+        
+      # Init container to source environment variables from Vault file
+      initContainers:
+      - name: vault-env-setup
+        image: busybox:1.35
+        command:
+        - /bin/sh
+        - -c
+        - |
+          echo "Waiting for Vault secret file..."
+          while [ ! -f /vault/secrets/db-creds.env ]; do
+            sleep 2
+          done
+          echo "Vault secrets loaded successfully"
+          cat /vault/secrets/db-creds.env
+        volumeMounts:
+        - name: vault-secrets
+          mountPath: /vault/secrets
+          readOnly: true
