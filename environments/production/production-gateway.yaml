@@ -12,7 +12,7 @@ spec:
       name: http-prod
       protocol: HTTP
     hosts:
-      - "pheonix-production.pheonix.live"
+      - "pheonix.live"
       - "prod.pheonix.live" # Include root/simplified production host
     tls:
       httpsRedirect: true
@@ -21,7 +21,7 @@ spec:
       name: https-prod
       protocol: HTTPS
     hosts:
-      - "pheonix-production.pheonix.live"
+      - "pheonix.live"
       - "*.pheonix.live" # Wildcard cert is required here
     tls:
       mode: SIMPLE
