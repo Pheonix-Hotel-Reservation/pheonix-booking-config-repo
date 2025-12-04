@@ -28,13 +28,7 @@ spec:
         # Define the template for the secret file content
         vault.hashicorp.com/agent-inject-template-db-creds.env: |
           {{`{{- with secret "kv/secret/data/user-service/database" }}
-          # Secret found
-          {{- range $key, $value := .Data }}
-          {{ $key }}='{{ $value }}'
-          {{- end }}
-          {{- else }}
-          # Secret not found at this path
-          MONGODB_URI='SECRET_NOT_FOUND'
+          MONGODB_URI='{{ .Data.data.MONGODB_URI }}'
           {{- end }}`}}
         
         # ----------------------------------------------------
