@@ -20,18 +20,18 @@ spec:
         paths: ["/"]
     when:
     - key: request.auth.claims[groups]
-      values: ["*admin*"]  # Matches any groups claim containing "admin"
+      values: ["*admin*"]
   
-  # Rule 2: Any authenticated user access to ID-based endpoints
+  # Rule 2: Any authenticated user access to specific patterns
   - from:
     - source:
         requestPrincipals: ["*"]
     to:
     - operation:
         methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
-        # Matches paths like /123, /abc123, /user123/loyalty-points, etc.
-        # but NOT the root path /
-        paths: ["/*"]
-    when:
-    - key: request.url_path
-      notValues: ["/"]  # Exclude the root path from this rule
+        # Explicitly match the patterns you want to allow
+        paths: 
+        - "/[0-9]*"              # Matches /123, /456, etc. (numeric IDs)
+        - "/[a-zA-Z0-9]*"        # Matches /abc123, /user456, etc. (alphanumeric IDs)
+        - "/*/loyalty-points"     # Matches /:id/loyalty-points
+        - "/asgardeo/*"          # Matches /asgardeo/:asgardeoId
