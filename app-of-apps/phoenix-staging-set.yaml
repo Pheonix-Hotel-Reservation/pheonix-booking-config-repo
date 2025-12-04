@@ -31,7 +31,7 @@ spec:
           # CRITICAL FIX 2: Use the standard 'targetRevision' field here
           targetRevision: main 
           ref: values
-          path: $values/environments/staging
+          path: environments/staging
           directory:
               include: '{staging-gateway.yaml,staging-router-vs.yaml}'
         
