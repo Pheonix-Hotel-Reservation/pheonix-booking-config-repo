@@ -20,3 +20,10 @@ spec:
       claim: email
     - header: x-auth-user-groups
       claim: groups
+
+  rules:
+    - from:
+      - source: {}
+      to:
+      - operation:
+          paths: ["/health", "/healthz", "/ready", "/alive"]
