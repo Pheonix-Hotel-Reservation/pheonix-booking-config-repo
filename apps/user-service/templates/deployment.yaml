@@ -48,6 +48,19 @@ spec:
           {{ toYaml .Values.resources | nindent 12 }}
         ports:
         - containerPort: {{ .Values.service.port }}
+
+        command:
+          - /bin/sh
+          - "-c"
+          - |
+            # Source the secret file to export MONGO_URI into the shell environment.
+            # This is where the application reads the secret.
+            . /vault/secrets/db-creds.env
+            
+            echo "Vault secrets sourced. Starting Node service..."
+            
+            # Execute the main application command (using 'exec' to replace the shell process)
+            exec node services/user-service/src/index.js
         
         # Environment variables
         env:
