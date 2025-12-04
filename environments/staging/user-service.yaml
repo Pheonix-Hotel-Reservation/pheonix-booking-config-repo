@@ -5,5 +5,5 @@ image:
 imagePullSecret:
   name: harbor-pull-secret
 
-replicaCount: 1
+replicaCount: 2
 debugMode: true
