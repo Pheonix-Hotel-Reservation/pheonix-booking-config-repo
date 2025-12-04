@@ -1,3 +1,7 @@
+{{- $vaultTemplate := `{{- with secret "secret/data/user-service/database" -}}
+MONGODB_URI={{ .Data.data.MONGODB_URI }}
+{{- end -}}` }}
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -14,14 +18,22 @@ spec:
       labels:
         app: user-service
       annotations:
+        # ----------------------------------------------------
+        # VAULT AGENT INJECTOR ANNOTATIONS
+        # ----------------------------------------------------
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/role: "user-role"
         vault.hashicorp.com/secret-volume-path: "/vault/secrets" 
+        
+        # Define the Secret Path and target file (db-creds.env)
         vault.hashicorp.com/agent-inject-secret-db-creds.env: "secret/data/user-service/database"
-        vault.hashicorp.com/agent-inject-template-db-creds.env: |
-          {`{{- with secret "secret/data/user-service/database" }}`}}
-          MONGODB_URI=mongodb://{`{{ .Data.data.username }}`}}:{`{{ .Data.data.password }}`}}@{`{{ .Data.data.host }}`}}:{`{{ .Data.data.port | default "27017" }}`}}/phoenix-user-service
-          {`{{- end }}`}}
+        
+        # Define the template for the secret file content
+        vault.hashicorp.com/agent-inject-template-db-creds.env: {{ $vaultTemplate | quote }}
+        
+        # ----------------------------------------------------
+        # ISTIO / PROMETHEUS ANNOTATIONS
+        # ----------------------------------------------------
         prometheus.io/scrape: "true"
         prometheus.io/port: "{{ .Values.service.port }}" 
         
@@ -37,15 +49,18 @@ spec:
         ports:
         - containerPort: {{ .Values.service.port }}
         
+        # Environment variables
         env:
         - name: NODE_ENV
           value: {{ .Values.environment | default "staging" | quote }}
         
+        # Load environment variables from ConfigMap
         envFrom:
         - configMapRef:
             name: user-service-config
             optional: true
         
+        # Readiness and liveness probes
         readinessProbe:
           httpGet:
             path: /health
@@ -59,4 +74,3 @@ spec:
             port: {{ .Values.service.port }}
           initialDelaySeconds: 45
           periodSeconds: 30
-      
