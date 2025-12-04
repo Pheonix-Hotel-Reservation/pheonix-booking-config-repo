@@ -40,6 +40,10 @@ spec:
         
     spec:
       serviceAccountName: {{ .Values.serviceAccount.name }}
+
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret.name }}
+
       containers:
       - name: user-service
         image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
