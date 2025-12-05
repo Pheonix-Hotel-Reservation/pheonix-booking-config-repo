@@ -20,7 +20,7 @@ spec:
       uri: / # Strip the /api/user prefix before forwarding
     route:
     - destination:
-        host: user-service.phoenix-staging.svc.cluster.local # Internal FQDN
+        host: user-service.phoenix-production.svc.cluster.local # Internal FQDN
         port:
           number: 3001 # App's internal port
   
