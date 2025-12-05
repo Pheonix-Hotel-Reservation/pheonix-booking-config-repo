@@ -1,0 +1,14 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: gateway-allow-health-checks
+  namespace: istio-ingress  # Same namespace as your gateway
+spec:
+  selector:
+    matchLabels:
+      istio: ingress  # Matches your RequestAuthentication selector
+  action: ALLOW
+  rules:
+  - to:
+    - operation:
+        paths: ["/health", "/healthz", "/ready", "/alive"]
