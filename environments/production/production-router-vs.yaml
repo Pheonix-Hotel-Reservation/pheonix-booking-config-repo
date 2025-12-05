@@ -6,6 +6,7 @@ metadata:
 spec:
   hosts:
     - "pheonix.live"
+    - "prod.pheonix.live"
   gateways:
     - istio-ingress/production-gateway # Binds to the new dedicated production gateway
   http:
