@@ -2,7 +2,7 @@ apiVersion: security.istio.io/v1beta1
 kind: RequestAuthentication
 metadata:
   name: jwt-validation-policy
-  namespace: phoenix-staging  # Deploy where the Ingress Gateway resides
+  namespace: phoenix-production  # Deploy where the Ingress Gateway resides
 spec:
   selector:
     # CRITICAL: This targets the shared Envoy proxy workload
