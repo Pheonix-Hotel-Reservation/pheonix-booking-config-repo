@@ -31,9 +31,6 @@ spec:
           # CRITICAL FIX 2: Use the standard 'targetRevision' field here
           targetRevision: main 
           ref: values
-          path: environments/staging
-          directory:
-              include: '{staging-gateway.yaml,staging-router-vs.yaml}'
         
         # Source 2: The Base Helm Chart (The Consumer)
         - repoURL: 'https://github.com/Pheonix-Hotel-Reservation/pheonix-booking-config-repo.git'
