@@ -1,0 +1,37 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: user-service-jwt-required
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: user-service
+  action: ALLOW
+
+  rules:
+  # 1) Public health endpoint (no auth required)
+  - to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/health"]
+
+  # 2) Admin-only GET /
+  - from:
+    - source:
+        requestPrincipals: ["*"]          # must be authenticated
+    to:
+    - operation:
+        methods: ["GET"]
+        paths: ["/"]
+    when:
+    - key: "request.auth.claims[groups]"   # match the 'groups' claim
+      values: ["admin"]                    # prefer exact match; change if IdP uses a different value
+
+  # 3) All authenticated callers may use GET/POST/PUT/DELETE on any path
+  - from:
+    - source:
+        requestPrincipals: ["*"]
+    to:
+    - operation:
+        methods: ["GET","POST","PUT","DELETE"]

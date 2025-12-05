@@ -22,16 +22,6 @@ spec:
         port:
           number: 3001 # App's internal port
   
-  # 2. Route for Payment Service
-  - match:
-    - uri:
-        prefix: /api/hotel 
-    route:
-    - destination:
-        host: hotel-service.phoenix-production.svc.cluster.local
-        port:
-          number: 8080
-          
   # 3. Catch-all for Root/Static Content
   - match:
     - uri:

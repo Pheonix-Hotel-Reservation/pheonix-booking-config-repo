@@ -20,16 +20,6 @@ spec:
         host: user-service.phoenix-staging.svc.cluster.local # Internal FQDN
         port:
           number: 3001 # App's internal port
-  
-  # 2. Route for Payment Service
-  - match:
-    - uri:
-        prefix: /api/payment 
-    route:
-    - destination:
-        host: payment-service.phoenix-staging.svc.cluster.local
-        port:
-          number: 8080
           
   # 3. Catch-all for Root/Static Content
   - match:
