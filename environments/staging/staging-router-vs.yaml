@@ -14,7 +14,7 @@ spec:
   - match:
     - uri:
         # CRITICAL: Match traffic starting with /api/user
-        prefix: /api/user 
+        prefix: /api/users 
     route:
     - destination:
         host: user-service.phoenix-staging.svc.cluster.local # Internal FQDN

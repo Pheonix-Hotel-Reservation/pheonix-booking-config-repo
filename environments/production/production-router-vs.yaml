@@ -15,9 +15,7 @@ spec:
   - match:
     - uri:
         # CRITICAL: Match traffic starting with /api/user
-        prefix: /api/user 
-    rewrite:
-      uri: / # Strip the /api/user prefix before forwarding
+        prefix: /api/users 
     route:
     - destination:
         host: user-service.phoenix-production.svc.cluster.local # Internal FQDN
@@ -28,11 +26,9 @@ spec:
   - match:
     - uri:
         prefix: /api/hotel 
-    rewrite:
-      uri: / # Strip the /api/hotel prefix before forwarding
     route:
     - destination:
-        host: hotel-service.phoenix-staging.svc.cluster.local
+        host: hotel-service.phoenix-production.svc.cluster.local
         port:
           number: 8080
           
