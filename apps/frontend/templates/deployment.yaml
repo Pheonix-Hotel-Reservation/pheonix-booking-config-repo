@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: frontend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      serviceAccountName: frontend-sa # Links the pod to the required identity
+      containers:
+      - name: frontend
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        resources:
+          {{ toYaml .Values.resources | nindent 12 }}
+        ports:
+        - containerPort: {{ .Values.service.port }}
+        
+        # CRITICAL: Inject OIDC Configuration and Environment URLs
+        env:
+        # Source 1: SECURE DATA (from ESO-created Secret)
+        - name: VITE_ASGARDEO_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: asgardeo-oidc-secret
+              key: VITE_ASGARDEO_CLIENT_ID
+        - name: VITE_ASGARDEO_BASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: asgardeo-oidc-secret
+              key: VITE_ASGARDEO_BASE_URL
+
+        # Source 2: ENVIRONMENT DATA (from Helm Overlays, e.g., environments/staging/frontend-config.yaml)
+        - name: VITE_ASGARDEO_SIGN_IN_REDIRECT_URL
+          value: "{{ .Values.frontend.env.VITE_ASGARDEO_SIGN_IN_REDIRECT_URL }}"
+        - name: VITE_API_GATEWAY_URL
+          value: "{{ .Values.frontend.env.VITE_API_GATEWAY_URL }}"
+        # ... and so on for all required public URLs

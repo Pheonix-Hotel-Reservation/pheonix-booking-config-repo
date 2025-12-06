@@ -1,0 +1,16 @@
+image:
+  repository: registry.pheonix.live/phoenix-booking/frontend
+  tag: "v1.0.0"
+
+replicaCount: 2
+
+serviceAccount:
+  name: frontend-sa # The identity used to fetch OIDC configuration
+
+service:
+  port: 8080 # Port Nginx is exposed on in the container
+
+resources:
+  requests:
+    cpu: "50m"
+    memory: "128Mi"
