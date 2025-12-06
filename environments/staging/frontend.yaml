@@ -7,6 +7,7 @@ replicaCount: 1
 
 env:
   # Environment-specific URLs
-  VITE_ASGARDEO_SIGN_IN_REDIRECT_URL: "https://staging.pheonix.live/login"
+  VITE_ASGARDEO_SIGN_IN_REDIRECT_URL: "https://staging.pheonix.live/"
+  VITE_ASGARDEO_SIGN_OUT_REDIRECT_URL: "https://staging.pheonix.live/"
   VITE_API_GATEWAY_URL: "https://staging.pheonix.live/api"
   # ...
