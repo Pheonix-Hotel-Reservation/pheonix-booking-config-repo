@@ -10,20 +10,13 @@ spec:
   action: ALLOW
 
   rules:
-  # 1) Public health endpoint (no auth required)
-  - to:
-    - operation:
-        methods: ["GET"]
-        paths: ["/health"]
-
-  # 2) Admin-only GET /
   - from:
     - source:
         requestPrincipals: ["*"]          # must be authenticated
     to:
     - operation:
         methods: ["GET"]
-        paths: ["/"]
+        paths: ["/api/users/"]
     when:
     - key: "request.auth.claims[groups]"   # match the 'groups' claim
       values: ["admin"]                    # prefer exact match; change if IdP uses a different value
