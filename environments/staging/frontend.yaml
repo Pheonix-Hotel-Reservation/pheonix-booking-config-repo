@@ -5,6 +5,9 @@ image:
 # Configuration for the frontend application
 replicaCount: 1 
 
+imagePullSecret:
+  name: harbor-pull-secret
+
 env:
   # Environment-specific URLs
   VITE_ASGARDEO_SIGN_IN_REDIRECT_URL: "https://staging.pheonix.live/"
