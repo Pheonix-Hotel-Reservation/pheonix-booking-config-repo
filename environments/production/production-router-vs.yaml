@@ -29,6 +29,6 @@ spec:
     route:
     - destination:
         # You can point this to a static front-end service or another entry point
-        host: front-end-service.phoenix-staging.svc.cluster.local
+        host: frontend.phoenix-production.svc.cluster.local
         port:
-          number: 80
+          number: 8080
