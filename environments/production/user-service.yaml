@@ -1,6 +1,6 @@
 # /environments/staging/user-service.yaml
 image:
-  tag: "@sha256:2d3970babe535586a46f3eea58080bd066cc3b5dfbc3ab8241cdc5a643b3a56b"
+  tag: "@sha256:98c2c1697f4e00ef8dfc83b4c4248ce73ac4018472e93c8b8129527d9ed9966e"
 
 imagePullSecret:
   name: harbor-pull-secret
