@@ -39,7 +39,7 @@ spec:
 
         # Source 2: ENVIRONMENT DATA (from Helm Overlays, e.g., environments/staging/frontend-config.yaml)
         - name: VITE_ASGARDEO_SIGN_IN_REDIRECT_URL
-          value: "{{ .Values.frontend.env.VITE_ASGARDEO_SIGN_IN_REDIRECT_URL }}"
+          value: "{{ .Values.env.VITE_ASGARDEO_SIGN_IN_REDIRECT_URL }}"
         - name: VITE_API_GATEWAY_URL
-          value: "{{ .Values.frontend.env.VITE_API_GATEWAY_URL }}"
+          value: "{{ .Values.env.VITE_API_GATEWAY_URL }}"
         # ... and so on for all required public URLs
