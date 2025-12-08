@@ -17,7 +17,7 @@ spec:
       serviceAccountName: frontend-sa # Links the pod to the required identity
       containers:
       - name: frontend
-        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        image: {{ printf "%s%s" .Values.image.repository .Values.image.tag | quote }}
         resources:
           {{ toYaml .Values.resources | nindent 12 }}
         ports:
