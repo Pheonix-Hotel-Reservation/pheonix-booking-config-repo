@@ -15,6 +15,8 @@ spec:
         app: frontend
     spec:
       serviceAccountName: frontend-sa # Links the pod to the required identity
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret.name }}
       containers:
       - name: frontend
         image: {{ printf "%s%s" .Values.image.repository .Values.image.tag | quote }}

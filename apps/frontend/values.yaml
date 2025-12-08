@@ -10,6 +10,10 @@ serviceAccount:
 service:
   port: 8080 # Port Nginx is exposed on in the container
 
+imagePullSecret:
+  # Provide a default name here. It will be overridden, but prevents the crash.
+  name: "harbor-pull-secret"
+
 resources:
   requests:
     cpu: "50m"
