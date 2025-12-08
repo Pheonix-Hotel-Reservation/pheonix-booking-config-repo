@@ -1,30 +1,44 @@
-# apps/rabbitmq/values.yaml
+# Recommended RabbitMQ configuration for Microservices
 
-# Override settings for the official Bitnami RabbitMQ chart (aliased as rabbitmq-broker)
-rabbitmq-broker:
+# CRITICAL FIX: The Bitnami repository is no longer free/public on Docker Hub.
+# Switching to the OFFICIAL Docker Library image, which is stable and free.
+image:
+  # Using the official public repository path: docker.io/library/rabbitmq
+  repository: docker.io/library/rabbitmq
+  # CRITICAL: Using the specified stable tag with management plugin on Alpine base
+  tag: 4.1.6-management-alpine 
+  pullPolicy: IfNotPresent
   
-  # CRITICAL: Persistence (Mandatory for message durability)
-  persistence:
-    enabled: true
-    storageClass: "do-block-storage-retain" # Your DigitalOcean storage class
-    size: 5Gi 
+auth:
+  # CRITICAL: Define the username and password used by your services
+  # NOTE: These values should ideally be managed via External Secrets Operator (ESO)
+  # reading from Vault, not hardcoded here.
+  username: user
+  password: rabbitmq-secret-password-placeholder
+  erlangCookie: "long-random-string-for-clustering" 
 
-  # Resource limits (RabbitMQ is memory-intensive)
-  resources:
-    requests:
-      memory: 512Mi
-      cpu: 250m
-    limits:
-      memory: 1Gi
-      cpu: 500m
+# Enable persistence (CRITICAL for production)
+persistence:
+  enabled: true
+  storageClass: "default" # Use your cluster's default storage class
+  size: 10Gi
 
-  # Enable the Management Plugin for the UI
-  auth:
-    enabled: true
-  
-  rabbitmq:
-    # Set the standard client and management ports
-    service:
-      ports:
-        amqp: 5672
-        http: 15672
+# Enable the Management Plugin (for UI access and testing)
+# We will use this to verify the queue is functioning.
+metrics:
+  enabled: true
+  service:
+    type: ClusterIP
+    port: 15692 # Metrics port
+
+ingress:
+  enabled: false # Use Istio VirtualService for external access, not standard Ingress
+
+# Resource limits (adjust based on load)
+resources:
+  requests:
+    cpu: 250m
+    memory: 512Mi
+  limits:
+    cpu: 500m
+    memory: 1024Mi
