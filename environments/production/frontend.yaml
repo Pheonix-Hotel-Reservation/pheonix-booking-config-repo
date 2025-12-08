@@ -1,5 +1,5 @@
 image:
-  tag: "latest-staging-build" 
+  tag: "@sha256:7b5f1be2aea61b49ef9a0a2961ed55dba21e061bdb64e93950153b3d340bcfe9"
 
 # Configuration for the frontend application
 replicaCount: 1 
