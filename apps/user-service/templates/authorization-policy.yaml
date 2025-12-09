@@ -11,13 +11,13 @@ spec:
   rules:
   
   # Rule 2: Admin-only access to GET /api/users/
-  - to:
-    - operation:
-        methods: ["GET"]
-        paths: ["/api/users/"]
-    when:
-    - key: request.headers[x-auth-user-groups]
-      values: ["*admin*"]
+  # - to:
+  #   - operation:
+  #       methods: ["GET"]
+  #       paths: ["/api/users/"]
+  #   when:
+  #   - key: request.headers[x-auth-user-groups]
+  #     values: ["*admin*"]
   
   # Rule 3: Authenticated users for specific endpoints
   - to:
