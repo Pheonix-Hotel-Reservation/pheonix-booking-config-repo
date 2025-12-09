@@ -28,3 +28,10 @@ spec:
     to:
     - operation:
         methods: ["GET","POST","PUT","DELETE"]
+        paths: 
+        - "/api/users/[0-9]*"              # /api/users/123
+        - "/api/users/profile"             # /api/users/profile
+        - "/api/users/*/loyalty-points"    # /api/users/123/loyalty-points
+    when:
+    - key: request.headers[x-auth-user-id]
+      notValues: [""]
