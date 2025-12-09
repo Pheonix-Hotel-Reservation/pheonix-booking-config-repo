@@ -17,7 +17,7 @@ spec:
         paths: ["/api/users/"]
     when:
     - key: request.headers[x-auth-user-groups]
-      values: ["admin"]
+      values: ["*admin*"]
   
   # Rule 3: Authenticated users for specific endpoints
   - to:
