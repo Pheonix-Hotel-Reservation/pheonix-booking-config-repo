@@ -8,24 +8,26 @@ spec:
     matchLabels:
       app: user-service
   action: ALLOW
-
   rules:
-    to:
+  
+  # Rule 2: Admin-only access to GET /api/users/
+  - to:
     - operation:
         methods: ["GET"]
         paths: ["/api/users/"]
     when:
-    - key: "request.headers[x-auth-user-groups]"   # match the 'groups' claim
-      values: ["admin"]                    # prefer exact match; change if IdP uses a different value
-
-  # 3) All authenticated callers may use GET/POST/PUT/DELETE on any path
-    to:
+    - key: request.headers[x-auth-user-groups]
+      values: ["admin"]
+  
+  # Rule 3: Authenticated users for specific endpoints
+  - to:
     - operation:
-        methods: ["GET","POST","PUT","DELETE"]
+        methods: ["GET", "POST", "PUT", "DELETE"]
         paths: 
-        - "/api/users/[0-9]*"              # /api/users/123
-        - "/api/users/profile"             # /api/users/profile
-        - "/api/users/*/loyalty-points"    # /api/users/123/loyalty-points
+        - "/api/users/[0-9]*"
+        - "/api/users/profile"
+        - "/api/users/*/loyalty-points"
+        - "/api/users/asgardeo/*"
     when:
     - key: request.headers[x-auth-user-id]
       values: ["*"]
