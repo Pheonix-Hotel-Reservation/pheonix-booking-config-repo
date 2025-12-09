@@ -10,9 +10,6 @@ spec:
   action: ALLOW
 
   rules:
-  - from:
-    - source:
-        principals: ["*"]          # must be authenticated
     to:
     - operation:
         methods: ["GET"]
@@ -22,9 +19,6 @@ spec:
       values: ["admin"]                    # prefer exact match; change if IdP uses a different value
 
   # 3) All authenticated callers may use GET/POST/PUT/DELETE on any path
-  - from:
-    - source:
-        principals: ["*"]
     to:
     - operation:
         methods: ["GET","POST","PUT","DELETE"]
@@ -34,4 +28,4 @@ spec:
         - "/api/users/*/loyalty-points"    # /api/users/123/loyalty-points
     when:
     - key: request.headers[x-auth-user-id]
-      notValues: [""]
+      values: ["*"]
