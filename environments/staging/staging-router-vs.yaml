@@ -21,13 +21,12 @@ spec:
         port:
           number: 3001 # App's internal port
           
-
   - match:
     - uri:
         prefix: /api/header-test
     route:
     - destination:
-        host: header-echo.phoenix-staging.svc.cluster.local
+        host: phoenix-staging-header-echo.phoenix-staging.svc.cluster.local
         port:
           number: 3000
 
