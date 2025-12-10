@@ -21,6 +21,17 @@ spec:
         port:
           number: 3001 # App's internal port
           
+
+  - match:
+    - uri:
+        prefix: /api/header-test
+    route:
+    - destination:
+        host: header-echo.phoenix-staging.svc.cluster.local
+        port:
+          number: 3000
+
+
   # 3. Catch-all for Root/Static Content
   - match:
     - uri:
@@ -32,11 +43,4 @@ spec:
         port:
           number: 8080
 
-    - match:
-      - uri:
-          prefix: /api/header-test
-      route:
-      - destination:
-          host: header-echo.phoenix-staging.svc.cluster.local
-          port:
-            number: 3000
+    
