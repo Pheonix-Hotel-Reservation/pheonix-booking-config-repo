@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "header-echo.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: header-echo
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: header-echo
+  template:
+    metadata:
+      labels:
+        app: header-echo
+    spec:
+      containers:
+      - name: header-echo
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        workingDir: /app
+        command: ["sh", "-c", "npm install && npm start"]
+        ports:
+        - name: http
+          containerPort: {{ .Values.service.targetPort }}
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: /app
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+      - name: config
+        configMap:
+          name: {{ include "header-echo.fullname" . }}-config

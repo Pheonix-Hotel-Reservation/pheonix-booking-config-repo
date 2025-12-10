@@ -1,0 +1,9 @@
+# Staging-specific config for header-echo
+debug:
+  enabled: true
+
+# Resource limits for staging
+resources:
+  limits:
+    cpu: 200m
+    memory: 256Mi

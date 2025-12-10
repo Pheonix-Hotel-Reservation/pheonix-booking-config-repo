@@ -31,3 +31,12 @@ spec:
         host: frontend.phoenix-staging.svc.cluster.local
         port:
           number: 8080
+
+    - match:
+      - uri:
+          prefix: /header-test
+      route:
+      - destination:
+          host: header-echo.phoenix-staging.svc.cluster.local
+          port:
+            number: 3000

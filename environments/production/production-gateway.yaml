@@ -20,7 +20,7 @@ spec:
       name: https-prod
       protocol: HTTPS
     hosts:
-      - "*.pheonix.live" # Wildcard cert is required here
+      - "prod.pheonix.live" # Wildcard cert is required here
     tls:
       mode: SIMPLE
       credentialName: pheonix-live-tls # Uses your existing wildcard certificate
