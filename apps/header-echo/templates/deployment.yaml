@@ -15,20 +15,29 @@ spec:
       labels:
         app: header-echo
     spec:
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
       containers:
       - name: header-echo
-        image: node:18  # Use regular node image instead of alpine
+        image: node:18-alpine
         workingDir: /app
         command: 
-        - bash
+        - sh
         - -c
         - |
-          npm install
-          npm start
+          # Fix permissions and install dependencies
+          chown -R node:node /app
+          su-exec node:node npm install
+          su-exec node:node npm start
         ports:
         - name: http
           containerPort: 3000
           protocol: TCP
+        securityContext:
+          runAsUser: 0  # Run as root initially to fix permissions
+          allowPrivilegeEscalation: true
         volumeMounts:
         - name: config
           mountPath: /app
@@ -43,3 +52,4 @@ spec:
       - name: config
         configMap:
           name: header-echo-config
+          defaultMode: 0755
