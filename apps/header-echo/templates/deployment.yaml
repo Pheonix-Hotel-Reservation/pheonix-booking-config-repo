@@ -15,39 +15,23 @@ spec:
       labels:
         app: header-echo
     spec:
-      initContainers:
-      - name: setup
-        image: node:18-alpine
-        workingDir: /app
-        command:
-        - sh
-        - -c
-        - |
-          cp -r /config/* /app/
-          npm install
-        volumeMounts:
-        - name: config-source
-          mountPath: /config
-        - name: app-dir
-          mountPath: /app
-        securityContext:
-          runAsUser: 1000
-          runAsGroup: 1000
       containers:
       - name: header-echo
-        image: node:18-alpine
+        image: node:18
         workingDir: /app
-        command: ["npm", "start"]
+        command: 
+        - bash
+        - -c
+        - |
+          npm install
+          npm start
         ports:
         - name: http
           containerPort: 3000
           protocol: TCP
         volumeMounts:
-        - name: app-dir
+        - name: config
           mountPath: /app
-        securityContext:
-          runAsUser: 1000
-          runAsGroup: 1000
         resources:
           limits:
             cpu: 200m
@@ -56,8 +40,6 @@ spec:
             cpu: 100m
             memory: 128Mi
       volumes:
-      - name: config-source
+      - name: config
         configMap:
           name: header-echo-config
-      - name: app-dir
-        emptyDir: {}
