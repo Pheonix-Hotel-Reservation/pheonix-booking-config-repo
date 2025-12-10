@@ -24,7 +24,7 @@ spec:
     - operation:
         methods: ["GET", "POST", "PUT", "DELETE"]
         paths: 
-        - "/api/users/[0-9]*"
+        - "/api/users/*"
         - "/api/users/profile"
         - "/api/users/*/loyalty-points"
         - "/api/users/asgardeo/*"
