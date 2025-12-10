@@ -34,7 +34,7 @@ spec:
 
     - match:
       - uri:
-          prefix: /header-test
+          prefix: /api/header-test
       route:
       - destination:
           host: header-echo.phoenix-staging.svc.cluster.local
