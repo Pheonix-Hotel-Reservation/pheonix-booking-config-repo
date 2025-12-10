@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "header-echo.fullname" . }}
+  name: header-echo
   namespace: {{ .Release.Namespace }}
   labels:
     app: header-echo
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       app: header-echo
@@ -15,22 +15,49 @@ spec:
       labels:
         app: header-echo
     spec:
+      initContainers:
+      - name: setup
+        image: node:18-alpine
+        workingDir: /app
+        command:
+        - sh
+        - -c
+        - |
+          cp -r /config/* /app/
+          npm install
+        volumeMounts:
+        - name: config-source
+          mountPath: /config
+        - name: app-dir
+          mountPath: /app
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
       containers:
       - name: header-echo
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: node:18-alpine
         workingDir: /app
-        command: ["sh", "-c", "npm install && npm start"]
+        command: ["npm", "start"]
         ports:
         - name: http
-          containerPort: {{ .Values.service.targetPort }}
+          containerPort: 3000
           protocol: TCP
         volumeMounts:
-        - name: config
+        - name: app-dir
           mountPath: /app
+        securityContext:
+          runAsUser: 1000
+          runAsGroup: 1000
         resources:
-          {{- toYaml .Values.resources | nindent 12 }}
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
       volumes:
-      - name: config
+      - name: config-source
         configMap:
-          name: {{ include "header-echo.fullname" . }}-config
+          name: header-echo-config
+      - name: app-dir
+        emptyDir: {}
