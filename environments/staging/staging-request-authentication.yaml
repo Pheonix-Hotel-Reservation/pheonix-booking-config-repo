@@ -19,4 +19,4 @@ spec:
     - header: x-auth-user-email
       claim: email
     - header: x-auth-user-groups
-      claim: groups
+      claim: groups[0]
