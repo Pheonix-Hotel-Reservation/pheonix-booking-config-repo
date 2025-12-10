@@ -1,12 +1,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "header-echo.fullname" . }}
+  name: header-echo
   namespace: {{ .Release.Namespace }}
   labels:
     app: header-echo
 spec:
-  replicas: {{ .Values.replicaCount }}
+  replicas: 1
   selector:
     matchLabels:
       app: header-echo
@@ -17,20 +17,29 @@ spec:
     spec:
       containers:
       - name: header-echo
-        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        image: node:18  # Use regular node image instead of alpine
         workingDir: /app
-        command: ["sh", "-c", "npm install && npm start"]
+        command: 
+        - bash
+        - -c
+        - |
+          npm install
+          npm start
         ports:
         - name: http
-          containerPort: {{ .Values.service.targetPort }}
+          containerPort: 3000
           protocol: TCP
         volumeMounts:
         - name: config
           mountPath: /app
         resources:
-          {{- toYaml .Values.resources | nindent 12 }}
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
       volumes:
       - name: config
         configMap:
-          name: {{ include "header-echo.fullname" . }}-config
+          name: header-echo-config
