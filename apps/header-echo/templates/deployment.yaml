@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: header-echo
+  name: {{ include "header-echo.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
     app: header-echo
@@ -24,22 +24,13 @@ spec:
         - -c
         - |
           npm install
-          npm start
+          node app.js
         ports:
-        - name: http
-          containerPort: 3000
-          protocol: TCP
+        - containerPort: 3000
         volumeMounts:
         - name: config
           mountPath: /app
-        resources:
-          limits:
-            cpu: 200m
-            memory: 256Mi
-          requests:
-            cpu: 100m
-            memory: 128Mi
       volumes:
       - name: config
         configMap:
-          name: header-echo-config
+          name: {{ include "header-echo.fullname" . }}-config  # Now matches ConfigMap
