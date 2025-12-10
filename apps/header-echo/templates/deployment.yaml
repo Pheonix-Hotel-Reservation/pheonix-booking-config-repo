@@ -15,22 +15,51 @@ spec:
       labels:
         app: header-echo
     spec:
-      containers:
-      - name: header-echo
+      initContainers:
+      - name: setup
         image: node:18
-        workingDir: /app
-        command: 
+        workingDir: /workspace
+        command:
         - bash
         - -c
         - |
+          echo "Copying files from ConfigMap..."
+          cp /config/* /workspace/
+          ls -la /workspace/
+          echo "Installing dependencies..."
           npm install
-          node app.js
+          echo "Setup complete!"
+        volumeMounts:
+        - name: config
+          mountPath: /config
+        - name: workspace
+          mountPath: /workspace
+        securityContext:
+          runAsUser: 0  # Run as root to avoid permission issues
+          
+      containers:
+      - name: header-echo
+        image: node:18
+        workingDir: /workspace
+        command: ["node", "app.js"]
         ports:
         - containerPort: 3000
         volumeMounts:
-        - name: config
-          mountPath: /app
+        - name: workspace
+          mountPath: /workspace
+        securityContext:
+          runAsUser: 0  # Run as root for simplicity
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+            
       volumes:
       - name: config
         configMap:
-          name: {{ include "header-echo.fullname" . }}-config  # Now matches ConfigMap
+          name: {{ include "header-echo.fullname" . }}-config
+      - name: workspace
+        emptyDir: {}
