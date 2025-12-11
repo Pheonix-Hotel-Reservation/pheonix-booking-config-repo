@@ -6,7 +6,7 @@ version: 0.1.0
 
 dependencies:
   - name: rabbitmq
-    version: 0.10.0 # Use a stable version of the chart
+    version: 0.7.10 # Use a stable version of the chart
     # CRITICAL FIX: Use the OCI registry URL instead of the failed HTTP repository URL
     repository: "oci://registry-1.docker.io/cloudpirates" 
     alias: rabbitmq-broker
