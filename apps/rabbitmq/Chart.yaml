@@ -2,10 +2,11 @@ apiVersion: v2
 name: rabbitmq
 description: Wrapper chart for the RabbitMQ message broker.
 type: application
-version: 0.1.0 # Version of your wrapper chart
+version: 0.1.0 
 
 dependencies:
   - name: rabbitmq
-    version: 16.0.3 # Use a stable, recent version of the official chart
-    repository: "https://charts.bitnami.com/bitnami" # The official chart repository
-    alias: rabbitmq-broker # Give it a unique alias
+    version: 0.10.0 # Use a stable version of the chart
+    # CRITICAL FIX: Use the OCI registry URL instead of the failed HTTP repository URL
+    repository: "oci://registry-1.docker.io/cloudpirates" 
+    alias: rabbitmq-broker
