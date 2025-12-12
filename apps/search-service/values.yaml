@@ -10,7 +10,7 @@ imagePullSecret:
   name: "harbor-pull-secret"
 
 serviceAccount:
-  name: phoenix-booking-sa # CRITICAL: Service Account for Vault Auth
+  name: search-sa # CRITICAL: Service Account for Vault Auth
 
 service:
   port: 3006 # Internal application port
