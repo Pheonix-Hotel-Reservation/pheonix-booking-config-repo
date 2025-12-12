@@ -1,0 +1,22 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: hotel-service-jwt-required
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: hotel-service
+  action: ALLOW
+  rules:
+
+  # Rule: Authenticated users for hotel endpoints
+  - to:
+    - operation:
+        methods: ["GET", "POST", "PUT", "DELETE"]
+        paths:
+        - "/api/hotels/*"
+        - "/api/hotels"
+    when:
+    - key: request.headers[x-auth-user-id]
+      values: ["*"]

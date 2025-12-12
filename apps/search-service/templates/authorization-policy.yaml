@@ -1,0 +1,22 @@
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: search-service-jwt-required
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: search-service
+  action: ALLOW
+  rules:
+
+  # Rule: Authenticated users for search endpoints
+  - to:
+    - operation:
+        methods: ["GET", "POST"]
+        paths:
+        - "/api/search/*"
+        - "/api/search"
+    when:
+    - key: request.headers[x-auth-user-id]
+      values: ["*"]

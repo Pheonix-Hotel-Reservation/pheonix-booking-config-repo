@@ -1,0 +1,22 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: reservation-service
+  labels:
+    # CRITICAL: This label must match the selector used by your Prometheus instance
+    # Assuming your kube-prometheus-stack uses app.kubernetes.io/part-of: platform
+    app.kubernetes.io/part-of: monitoring-stack
+spec:
+  selector:
+    matchLabels:
+      app: reservation-service # Selects the reservation-service K8s Service
+  endpoints:
+  - port: http-app # This name must match the name of the port in your Service YAML
+    path: /metrics # Standard path for application metrics
+    interval: 30s
+    scheme: http # Traffic inside the pod is HTTP (as TLS is terminated at the Gateway)
+
+  # If using Istio sidecar (which you are), Prometheus scrapes the sidecar proxy.
+  # This section ensures scraping is correctly routed by the mesh.
+  targetLabels:
+    - istio

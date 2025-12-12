@@ -1,0 +1,109 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service
+  labels:
+    app: notification-service
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+      annotations:
+        # ----------------------------------------------------
+        # VAULT AGENT INJECTOR ANNOTATIONS
+        # ----------------------------------------------------
+        vault.hashicorp.com/agent-inject: "true"
+        vault.hashicorp.com/role: "notification-role"
+        vault.hashicorp.com/secret-volume-path: "/vault/secrets"
+
+        # Define the Secret Path and target file (aws-creds.env)
+        vault.hashicorp.com/agent-inject-secret-aws-creds: "kv/data/secret/data/notification-service/aws"
+
+        # Define the template for AWS credentials
+        vault.hashicorp.com/agent-inject-template-aws-creds: |
+          {{`{{- with secret "kv/data/secret/data/notification-service/aws" -}}
+          export AWS_REGION="{{ .Data.data.AWS_REGION }}"
+          export AWS_ACCESS_KEY_ID="{{ .Data.data.AWS_ACCESS_KEY_ID }}"
+          export AWS_SECRET_ACCESS_KEY="{{ .Data.data.AWS_SECRET_ACCESS_KEY }}"
+          export SES_FROM_EMAIL="{{ .Data.data.SES_FROM_EMAIL }}"
+          {{- end }}`}}
+
+        # Define the Secret Path for RabbitMQ
+        vault.hashicorp.com/agent-inject-secret-rabbitmq-creds: "kv/data/secret/data/notification-service/rabbitmq"
+
+        # Define the template for RabbitMQ credentials
+        vault.hashicorp.com/agent-inject-template-rabbitmq-creds: |
+          {{`{{- with secret "kv/data/secret/data/notification-service/rabbitmq" -}}
+          export RABBITMQ_URL="{{ .Data.data.RABBITMQ_URL }}"
+          export NOTIFICATION_QUEUE="{{ .Data.data.NOTIFICATION_QUEUE }}"
+          {{- end }}`}}
+
+        # ----------------------------------------------------
+        # ISTIO / PROMETHEUS ANNOTATIONS
+        # ----------------------------------------------------
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.service.port }}"
+
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret.name }}
+      containers:
+      - name: notification-service
+        image: {{ printf "%s%s" .Values.image.repository .Values.image.tag | quote }}
+        resources:
+          {{ toYaml .Values.resources | nindent 12 }}
+        ports:
+        - containerPort: {{ .Values.service.port }}
+
+        command:
+          - /bin/sh
+          - "-c"
+          - |
+            # Source the secret files to export credentials into the shell environment
+            cat /vault/secrets/aws-creds
+            . /vault/secrets/aws-creds
+
+            cat /vault/secrets/rabbitmq-creds
+            . /vault/secrets/rabbitmq-creds
+
+            echo "Vault secrets sourced. Starting Node service..."
+
+            echo "NODE_ENV is set to: $NODE_ENV"
+            echo "AWS_REGION is set to: $AWS_REGION"
+            echo "RABBITMQ_URL is set to: $RABBITMQ_URL"
+
+            # Execute the main application command (using 'exec' to replace the shell process)
+            exec node services/notification-service/src/index.js
+
+        # Environment variables
+        env:
+        - name: NODE_ENV
+          value: {{ .Values.environment | default "staging" | quote }}
+
+        # Load environment variables from ConfigMap
+        envFrom:
+        - configMapRef:
+            name: notification-service-config
+            optional: true
+
+        # Readiness and liveness probes
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.service.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.service.port }}
+          initialDelaySeconds: 45
+          periodSeconds: 30

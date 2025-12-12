@@ -1,0 +1,75 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: search-service
+  labels:
+    app: search-service
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: search-service
+  template:
+    metadata:
+      labels:
+        app: search-service
+      annotations:
+        # ----------------------------------------------------
+        # ISTIO / PROMETHEUS ANNOTATIONS
+        # ----------------------------------------------------
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "{{ .Values.service.port }}"
+
+    spec:
+      serviceAccountName: {{ .Values.serviceAccount.name }}
+      imagePullSecrets:
+        - name: {{ .Values.imagePullSecret.name }}
+      containers:
+      - name: search-service
+        image: {{ printf "%s%s" .Values.image.repository .Values.image.tag | quote }}
+        resources:
+          {{ toYaml .Values.resources | nindent 12 }}
+        ports:
+        - containerPort: {{ .Values.service.port }}
+
+        command:
+          - /bin/sh
+          - "-c"
+          - |
+            echo "Starting Node service..."
+
+            echo "NODE_ENV is set to: $NODE_ENV"
+
+            # Execute the main application command (using 'exec' to replace the shell process)
+            exec node services/search-service/src/index.js
+
+        # Environment variables
+        env:
+        - name: NODE_ENV
+          value: {{ .Values.environment | default "staging" | quote }}
+        - name: HOTEL_SERVICE_URL
+          value: "http://hotel-service:3002"
+        - name: ROOM_SERVICE_URL
+          value: "http://room-service:3003"
+
+        # Load environment variables from ConfigMap
+        envFrom:
+        - configMapRef:
+            name: search-service-config
+            optional: true
+
+        # Readiness and liveness probes
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.service.port }}
+          initialDelaySeconds: 30
+          periodSeconds: 10
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: {{ .Values.service.port }}
+          initialDelaySeconds: 45
+          periodSeconds: 30

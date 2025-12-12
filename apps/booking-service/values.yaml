@@ -1,0 +1,24 @@
+# Defines default variables used in the template files
+
+image:
+  repository: registry.pheonix.live/phoenix-staging/reservation-service # Uses your new registry
+  tag: "v1.0.0"
+
+
+imagePullSecret:
+  # Provide a default name here. It will be overridden, but prevents the crash.
+  name: "harbor-pull-secret"
+
+serviceAccount:
+  name: phoenix-booking-sa # CRITICAL: Service Account for Vault Auth
+
+service:
+  port: 3004 # Internal application port
+
+resources:
+  requests:
+    cpu: "100m"
+    memory: "256Mi"
+  limits:
+    cpu: "300m"
+    memory: "512Mi"

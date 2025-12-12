@@ -1,0 +1,8 @@
+# apps/notification-service/Chart.yaml
+
+apiVersion: v2
+name: notification-service
+description: Base Helm chart for the Phoenix Booking Notification Microservice.
+type: application
+version: 0.1.0 # The version of this chart TEMPLATE structure
+appVersion: "1.0.0" # Optional: Version of the application code
