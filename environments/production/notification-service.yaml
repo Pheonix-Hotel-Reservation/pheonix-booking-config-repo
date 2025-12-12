@@ -1,0 +1,9 @@
+# /environments/staging/notification-service.yaml
+image:
+  tag: "v1.0.0"
+
+imagePullSecret:
+  name: harbor-pull-secret
+
+replicaCount: 1
+debugMode: true
