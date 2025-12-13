@@ -1,6 +1,6 @@
 # /environments/staging/search-service.yaml
 image:
-  tag: "v1.0.0"
+  tag: "@sha256:14f2a4ed3c193a711342bac852a6fd965e4c33c7a4e5c52340d0556a72440b6e"
 
 imagePullSecret:
   name: harbor-pull-secret
