@@ -10,10 +10,17 @@ imagePullSecret:
   name: "harbor-pull-secret"
 
 serviceAccount:
-  name: booking-sa # CRITICAL: Service Account for Vault Auth
+  name: reservation-sa # CRITICAL: Service Account for Vault Auth
 
 service:
   port: 3004 # Internal application port
+
+serviceEndpoints:
+  hotel: "http://hotel-service:3002"
+  room: "http://room-service:3003"
+
+notification:
+  fromEmail: "noreply@phoenix-booking.com"
 
 resources:
   requests:

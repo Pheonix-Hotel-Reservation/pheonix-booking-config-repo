@@ -71,9 +71,11 @@ spec:
         - name: NODE_ENV
           value: {{ .Values.environment | default "staging" | quote }}
         - name: HOTEL_SERVICE_URL
-          value: "http://hotel-service:3002"
+          value: {{ .Values.serviceEndpoints.hotel | quote }}
         - name: ROOM_SERVICE_URL
-          value: "http://room-service:3003"
+          value: {{ .Values.serviceEndpoints.room | quote }}
+        - name: NOTIFICATION_FROM_EMAIL
+          value: {{ .Values.notification.fromEmail | quote }}
 
         # Load environment variables from ConfigMap
         envFrom:
