@@ -1,6 +1,6 @@
 # /environments/staging/reservation-service.yaml
 image:
-  tag: "@sha256:af2e25b945957776fcdfb26c3361ef5d9e460f0206f93101f594647392ea6675"
+  tag: "@sha256:f49ec566e34de7d4622d6ae3834aaa19373fa7ad858a17fe25f76fb2576d4d3c"
 
 imagePullSecret:
   name: harbor-pull-secret
