@@ -70,6 +70,10 @@ spec:
         env:
         - name: NODE_ENV
           value: {{ .Values.environment | default "staging" | quote }}
+        - name: HOTEL_SERVICE_URL
+          value: "http://hotel-service:3002"
+        - name: ROOM_SERVICE_URL
+          value: "http://room-service:3003"
 
         # Load environment variables from ConfigMap
         envFrom:

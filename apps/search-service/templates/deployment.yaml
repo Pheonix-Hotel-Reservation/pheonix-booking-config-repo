@@ -52,6 +52,8 @@ spec:
           value: "http://hotel-service:3002"
         - name: ROOM_SERVICE_URL
           value: "http://room-service:3003"
+        - name: RESERVATION_SERVICE_URL
+          value: "http://reservation-service:3004"
 
         # Load environment variables from ConfigMap
         envFrom:
