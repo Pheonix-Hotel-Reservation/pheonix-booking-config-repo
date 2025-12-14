@@ -18,10 +18,12 @@ service:
 serviceEndpoints:
   hotel: "http://hotel-service:3002"
   room: "http://room-service:3003"
-  rabbitmq: "amqp://{{ include \"rabbitmq.fullname\" . }}.{{ .Release.Namespace }}.svc.cluster.local:5672"
 
 notification:
   fromEmail: "noreply@phoenix-booking.com"
+
+rabbitmq:
+  url: {{ include "rabbitmq.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:5672
 
 resources:
   requests:
