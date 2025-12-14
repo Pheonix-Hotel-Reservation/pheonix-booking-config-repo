@@ -2,9 +2,14 @@
 
 # This overrides the default settings in apps/rabbitmq/values.yaml
 
+serviceEndpoints:
+  rabbitmq: "amqp://phoenix-staging-rabbitmq-rabbitmq-broker:5672"
+
+
 rabbitmq-broker:
   # CRITICAL: Production Scaling (Requires quorum for high availability)
   replicaCount: 1
+
 
   # Resources (Allocate higher resources for the memory-intensive production broker)
   resources:
