@@ -14,7 +14,7 @@ auth:
   enabled: false # Ensure 'auth' section is not trying to generate its own secret
 
   # Tell the chart to use a pre-existing Secret instead of generating one
-  existingSecret: rabbitmq-broker-creds # The K8s Secret name created by ESO
+  existingSecret: rabbitmq # The K8s Secret name created by ESO
   # Note: The chart must support this 'existingSecret' parameter. 
   # If it doesn't, you may need to patch the chart's deployment template.
 
