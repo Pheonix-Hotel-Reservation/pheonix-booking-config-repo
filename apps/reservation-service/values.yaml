@@ -23,7 +23,7 @@ notification:
   fromEmail: "noreply@phoenix-booking.com"
 
 rabbitmq:
-  url: {{ include "rabbitmq.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:5672
+  url: "{{ include "rabbitmq.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:5672"
 
 resources:
   requests:
