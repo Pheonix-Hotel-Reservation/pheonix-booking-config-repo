@@ -39,3 +39,34 @@ resources:
   limits:
     cpu: 500m
     memory: 1024Mi
+
+extraInitContainers: |
+  - name: rabbitmq-user-init
+    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+    imagePullPolicy: {{ .Values.image.pullPolicy }}
+    env:
+      # Inject credentials from the K8s Secret created by ESO
+      - name: RABBITMQ_USER
+        valueFrom:
+          secretKeyRef:
+            name: rabbitmq # Name of your K8s Secret
+            key: rabbitmq-username # Key used in your ESO manifest
+      - name: RABBITMQ_PASS
+        valueFrom:
+          secretKeyRef:
+            name: rabbitmq # Name of your K8s Secret
+            key: rabbitmq-password # Key used in your ESO manifest
+    command: ["/bin/bash", "-c"]
+    args:
+      - |
+        # Wait for the main RabbitMQ service to be running
+        until rabbitmqctl status; do echo waiting for rabbitmq; sleep 5; done
+        
+        # 1. Add the user (this uses the credentials from the Secret)
+        rabbitmqctl add_user $RABBITMQ_USER $RABBITMQ_PASS
+        
+        # 2. Set the management tags (CRITICAL for Web UI access)
+        rabbitmqctl set_user_tags $RABBITMQ_USER administrator management
+        
+        # 3. Set the full permissions on the default virtual host
+        rabbitmqctl set_permissions -p / $RABBITMQ_USER ".*" ".*" ".*"
