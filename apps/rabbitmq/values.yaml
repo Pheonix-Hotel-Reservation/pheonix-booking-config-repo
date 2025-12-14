@@ -10,19 +10,9 @@ image:
   pullPolicy: IfNotPresent
   
 auth:
-  # 🛑 CRITICAL: Remove hardcoded values and configure Secret usage
-  enabled: false # Ensure 'auth' section is not trying to generate its own secret
-
-  # Tell the chart to use a pre-existing Secret instead of generating one
-  existingSecret: rabbitmq # The K8s Secret name created by ESO
-  # Note: The chart must support this 'existingSecret' parameter. 
-  # If it doesn't, you may need to patch the chart's deployment template.
-
-  # You may still need to keep the username field if the chart's template requires it
+  enabled: true # Re-enable the built-in user creation logic
+  existingSecret: rabbitmq # It will use this to get the password
   username: user
-  # Remove password field entirely:
-  # password: rabbitmq-secret-password-placeholder 
-  erlangCookie: "long-random-string-for-clustering"
 
 # Enable persistence (CRITICAL for production)
 persistence:
