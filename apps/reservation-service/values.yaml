@@ -22,6 +22,10 @@ serviceEndpoints:
 notification:
   fromEmail: "noreply@phoenix-booking.com"
 
+rabbitmq:
+  # CRITICAL: Define the correct service name explicitly
+  serviceHost: phoenix-staging-rabbitmq-rabbitmq-broker
+
 resources:
   requests:
     cpu: "100m"
