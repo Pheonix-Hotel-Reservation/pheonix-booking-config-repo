@@ -12,6 +12,7 @@ spec:
       name: http-staging
       protocol: HTTP
     hosts:
+      - "*.phoenix-staging.pheonix.live"
       - "pheonix-staging.pheonix.live"
     tls:
       httpsRedirect: true # Redirect all HTTP to HTTPS
@@ -20,6 +21,7 @@ spec:
       name: https-staging
       protocol: HTTPS
     hosts:
+      - "*.phoenix-staging.pheonix.live"
       - "pheonix-staging.pheonix.live"
     tls:
       mode: SIMPLE
