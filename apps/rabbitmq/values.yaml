@@ -10,12 +10,19 @@ image:
   pullPolicy: IfNotPresent
   
 auth:
-  # CRITICAL: Define the username and password used by your services
-  # NOTE: These values should ideally be managed via External Secrets Operator (ESO)
-  # reading from Vault, not hardcoded here.
+  # 🛑 CRITICAL: Remove hardcoded values and configure Secret usage
+  enabled: false # Ensure 'auth' section is not trying to generate its own secret
+
+  # Tell the chart to use a pre-existing Secret instead of generating one
+  existingSecret: rabbitmq-broker-creds # The K8s Secret name created by ESO
+  # Note: The chart must support this 'existingSecret' parameter. 
+  # If it doesn't, you may need to patch the chart's deployment template.
+
+  # You may still need to keep the username field if the chart's template requires it
   username: user
-  password: rabbitmq-secret-password-placeholder
-  erlangCookie: "long-random-string-for-clustering" 
+  # Remove password field entirely:
+  # password: rabbitmq-secret-password-placeholder 
+  erlangCookie: "long-random-string-for-clustering"
 
 # Enable persistence (CRITICAL for production)
 persistence:
