@@ -24,6 +24,6 @@ spec:
     route:
     - destination:
         # FQDN of the service created by the dependency chart
-        host: rabbitmq-broker-rabbitmq.{{ .Release.Namespace }}.svc.cluster.local 
+        host: phoenix-staging-rabbitmq-broker-rabbitmq.{{ .Release.Namespace }}.svc.cluster.local 
         port:
           number: 15672
