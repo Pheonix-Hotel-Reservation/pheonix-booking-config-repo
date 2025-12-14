@@ -39,6 +39,24 @@ spec:
         port:
           number: 3002
 
+  - match:
+    - uri:
+        prefix: /api/rooms
+    route:
+    - destination:
+        host: room-service.phoenix-staging.svc.cluster.local
+        port:
+          number: 3003
+
+  - match:
+    - uri:
+        prefix: /api/reservations
+    route:
+    - destination:
+        host: reservation-service.phoenix-staging.svc.cluster.local
+        port:
+          number: 3003
+
 
   # 3. Catch-all for Root/Static Content
   - match:
