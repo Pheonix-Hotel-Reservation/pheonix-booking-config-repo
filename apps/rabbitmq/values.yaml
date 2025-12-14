@@ -40,39 +40,5 @@ resources:
     cpu: 500m
     memory: 1024Mi
 
-extraInitContainers: |
-  - name: rabbitmq-user-init
-    image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}" # Uses the same image
-    imagePullPolicy: {{ .Values.image.pullPolicy }}
-    env:
-      # Inject credentials from the K8s Secret created by ESO
-      - name: RABBITMQ_USER
-        valueFrom:
-          secretKeyRef:
-            name: rabbitmq 
-            key: rabbitmq-username 
-      - name: RABBITMQ_PASS
-        valueFrom:
-          secretKeyRef:
-            name: rabbitmq 
-            key: rabbitmq-password 
-    command: ["/bin/bash", "-c"]
-    args:
-      - |
-        # Wait for the main broker to be fully operational before running CLI commands
-        until rabbitmqctl status 2>/dev/null; do 
-          echo "Waiting for RabbitMQ broker to start..."; 
-          sleep 5; 
-        done
-        
-        # 1. Add the user (using the secure, Vault-synced password)
-        # Note: add_user is idempotent if the user already exists.
-        rabbitmqctl add_user $RABBITMQ_USER $RABBITMQ_PASS
-        
-        # 2. Set the management tags (CRITICAL for Web UI login)
-        rabbitmqctl set_user_tags $RABBITMQ_USER administrator management
-        
-        # 3. Set the full permissions on the default virtual host
-        rabbitmqctl set_permissions -p / $RABBITMQ_USER ".*" ".*" ".*"
-        
-        echo "Successfully created and configured user: $RABBITMQ_USER"
+userSetupJob:
+  enabled: true
