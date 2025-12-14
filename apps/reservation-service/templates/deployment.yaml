@@ -77,7 +77,8 @@ spec:
         - name: NOTIFICATION_FROM_EMAIL
           value: {{ .Values.notification.fromEmail | quote }}
         - name: RABBITMQ_URL
-          value: "amqp://{{ include "reservation-service.rabbitmq.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:5672"
+          # Use a generic value key that will be set in the override file
+          value: "amqp://{{ .Values.rabbitmq.serviceHost }}.{{ .Release.Namespace }}.svc.cluster.local:5672"
 
         # Load environment variables from ConfigMap
         envFrom:

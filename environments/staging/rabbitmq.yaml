@@ -14,3 +14,7 @@ rabbitmq-broker:
     limits:
       memory: 1Gi
       cpu: 800m
+
+rabbitmq:
+  # CRITICAL: Define the correct service name explicitly
+  serviceHost: phoenix-staging-rabbitmq-rabbitmq-broker
