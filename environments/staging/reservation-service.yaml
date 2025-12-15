@@ -7,11 +7,11 @@ imagePullSecret:
 
 rabbitmq:
   # This variable defines the SECRET that holds the app credentials (the admin password)
-  secretName: "phoenix-staging-rabbitmq-rabbitmq-broker"
+  secretName: "rabbitmq"
   # This variable defines the specific KEY within that secret
-  passwordKey: "password"
+  passwordKey: "rabbitmq-password"
   # The username is static based on the broker's auto-creation
-  username: "admin"
+  username: "user"
 
 
 replicaCount: 1

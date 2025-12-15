@@ -77,7 +77,7 @@ spec:
         - name: NOTIFICATION_FROM_EMAIL
           value: {{ .Values.notification.fromEmail | quote }}
         - name: RABBITMQ_USER
-          value: "admin" # Pulls "admin" from values
+          value: "{{ .Values.rabbitmq.username }}" # Pulls "user" from values
 
         - name: RABBITMQ_PASSWORD
           valueFrom:
