@@ -15,12 +15,12 @@ spec:
       security.istio.io/tlsMode: istio
   podMetricsEndpoints:
     - path: /stats/prometheus
-      port: 15090          # Envoy admin /stats endpoint (envoy metrics)
+      port: "15090"          # Envoy admin /stats endpoint (envoy metrics)
       interval: 15s
       honorLabels: true
       scheme: http
     - path: /stats/prometheus
-      port: 15020          # Istio agent /proxy-agent metrics (agent-level)
+      port: "15020"          # Istio agent /proxy-agent metrics (agent-level)
       interval: 15s
       honorLabels: true
       scheme: http
