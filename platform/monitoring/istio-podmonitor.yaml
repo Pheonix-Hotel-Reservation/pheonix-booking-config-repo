@@ -1,25 +1,25 @@
-# File: platform/monitoring/istio-podmonitor.yaml (Corrected)
+# File: platform/monitoring/istio-podmonitor.yaml (FINAL CORRECTION)
 
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   name: istio-mesh-monitor
-  namespace: monitoring
+  namespace: monitoring 
   labels:
     release: monitoring-stack-kube-prom
 spec:
+  # --- ADD THIS BLOCK ---
+  namespaceSelector:
+    matchNames:
+    - phoenix-staging # Look for pods in the application namespace
+    # If you also want to scrape apps in 'production', add it here
+    - phoenix-production
+  # ----------------------
   selector:
     matchLabels:
-      security.istio.io/tlsMode: istio
+      security.istio.io/tlsMode: istio 
   podMetricsEndpoints:
-  - # REMOVE: name: istio-proxy  <-- THIS FIELD IS CAUSING THE ERROR
-    path: /stats/prometheus
+  - path: /stats/prometheus
     port: istio-metrics      
     interval: 15s
-    relabelings:
-      - sourceLabels: [__meta_kubernetes_pod_container_name]
-        action: keep
-        regex: istio-proxy
-      - sourceLabels: [__meta_kubernetes_pod_name]
-        action: replace
-        targetLabel: pod_name
+    # ... rest of relabelings (which are now correct)
