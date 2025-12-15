@@ -12,7 +12,7 @@ spec:
     targetRevision: main
     path: environments/staging
     directory:
-      include: '{staging-gateway.yaml,staging-router-vs.yaml,staging-request-authentication.yaml,gateway-allow-health-checks.yaml}'
+      include: '{staging-gateway.yaml,staging-router-vs.yaml,staging-request-authentication.yaml,gateway-allow-health-checks.yaml,prometheus-network-policy.yaml}'
   destination:
     server: https://kubernetes.default.svc
     namespace: phoenix-staging
