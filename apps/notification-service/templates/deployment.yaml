@@ -49,7 +49,7 @@ spec:
           # e.g., phoenix-staging-rabbitmq-rabbitmq-broker.messaging.svc.cluster.local:5672
           {{ $serviceName := printf "%s-rabbitmq-rabbitmq-broker" $namespace }}
 
-          {{ $host := printf "%s.phoenix-staging.svc.cluster.local:5672" $serviceName }}
+          {{ $host := printf "%s.%s.svc.cluster.local:5672" $serviceName $namespace }}
           
           # Construct the full AMQP URL
           export RABBITMQ_URL="amqp://{{ $username }}:{{ $password }}@{{ $host }}"
