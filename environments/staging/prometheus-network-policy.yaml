@@ -7,21 +7,23 @@ metadata:
   namespace: phoenix-staging # CRITICAL: Policy applies to this namespace
 spec:
   # This selector targets all pods that need to be scraped (all apps in the namespace)
-  podSelector: {} 
+  podSelector: {}
   policyTypes:
     - Ingress
   ingress:
+    # 1. Allow traffic from Istio ingress gateway
     - from:
-      # 1. Allow traffic from the source namespace (where Prometheus runs)
       - namespaceSelector:
           matchLabels:
-            name: monitoring 
-      # 2. Restrict the source to the Prometheus pods within that namespace
-      #    (Optional, but better security: use the Prometheus Pod labels if known)
-      # - podSelector:
-      #     matchLabels:
-      #       app.kubernetes.io/name: prometheus 
+            name: istio-system
+    # 2. Allow traffic within the same namespace (for inter-service communication)
+    - from:
+      - podSelector: {}
+    # 3. Allow Prometheus scraping from monitoring namespace on port 15020
+    - from:
+      - namespaceSelector:
+          matchLabels:
+            name: monitoring
       ports:
-        # 3. Allow traffic ONLY on the Istio metrics port (15020)
         - protocol: TCP
           port: 15020
