@@ -1,0 +1,25 @@
+# File: platform/monitoring/istio-podmonitor.yaml
+
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: istio-mesh-monitor
+  namespace: monitoring # <-- CRITICAL: Must be where your Prometheus is running
+  labels:
+    release: monitoring-stack-kube-prom # <-- Use the correct label to match your Prometheus Operator setup
+spec:
+  selector:
+    matchLabels:
+      security.istio.io/tlsMode: istio # Selects all application pods with the sidecar
+  podMetricsEndpoints:
+  - name: istio-proxy
+    path: /stats/prometheus
+    port: istio-metrics      
+    interval: 15s
+    relabelings:
+      - sourceLabels: [__meta_kubernetes_pod_container_name]
+        action: keep
+        regex: istio-proxy
+      - sourceLabels: [__meta_kubernetes_pod_name]
+        action: replace
+        targetLabel: pod_name
