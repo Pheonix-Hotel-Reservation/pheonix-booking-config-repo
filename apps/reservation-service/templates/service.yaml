@@ -8,6 +8,10 @@ spec:
     targetPort: {{ .Values.service.port }}
     protocol: TCP
     name: http-app # Istio will use this name for protocol detection
+  - port: 15020
+    targetPort: 15020
+    protocol: TCP
+    name: istio-metrics # Istio proxy metrics port
   selector:
     app: reservation-service
   type: ClusterIP
