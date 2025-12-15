@@ -1,31 +1,60 @@
-# File: platform/monitoring/istio-podmonitor.yaml (FINAL CORRECTED LABELS)
+# File: istio-mesh-monitor.yaml
 
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   name: istio-mesh-monitor
-  namespace: monitoring 
+  namespace: monitoring # Prometheus Operator is running here
   labels:
-    # 1. This label should be the RELEASE name from your Helm install
-    release: monitoring-stack 
-    # 2. Add the component name label (Crucial for Helm-driven selection)
+    # These labels MUST match the default selector in the Prometheus CR
+    # set by the kube-prometheus-stack Helm chart default configuration.
+    release: monitoring-stack  
     app: kube-prometheus-stack-prometheus 
-    # 3. Keep the corrected namespace selector (already verified as correct)
+spec:
+  # 1. Namespace Selector: Look for pods in these specific application namespaces
   namespaceSelector:
     matchNames:
-    - phoenix-staging 
-    - phoenix-production 
+    - phoenix-staging
+    - phoenix-production
+  
+  # 2. Pod Selector: Select all pods that have an Istio sidecar injected
   selector:
     matchLabels:
-      security.istio.io/tlsMode: istio
+      security.istio.io/tlsMode: istio 
+  
+  # 3. Scrape Endpoint Configuration
   podMetricsEndpoints:
-    - path: /stats/prometheus
-      port: "15090"          # Envoy admin /stats endpoint (envoy metrics)
-      interval: 15s
-      honorLabels: true
-      scheme: http
-    - path: /stats/prometheus
-      port: "15020"          # Istio agent /proxy-agent metrics (agent-level)
-      interval: 15s
-      honorLabels: true
-      scheme: http
+  - path: /stats/prometheus
+    # Use the name of the port exposed by the Istio proxy (usually 15020)
+    port: istio-metrics      
+    interval: 15s
+    scheme: http # Use http for simplicity; upgrade to https if strict mTLS is enforced.
+
+    # 4. Relabeling Rules: Essential for cleaning up labels and targeting the istio-proxy container
+    relabelings:
+    
+    # KEEP: Only targets with the container name 'istio-proxy' (the sidecar)
+    # - action: keep
+    #   sourceLabels: [__meta_kubernetes_pod_container_name]
+    #   regex: "istio-proxy"
+
+    # DROP: Ignore pods that are in a terminal state (Failed or Succeeded)
+    - action: drop
+      sourceLabels:
+      - __meta_kubernetes_pod_phase
+      regex: (Failed|Succeeded)
+    
+    # REPLACE: Set the 'namespace' label using the Kubernetes metadata
+    - sourceLabels: [__meta_kubernetes_namespace]
+      action: replace
+      targetLabel: namespace
+      
+    # REPLACE: Set the 'pod' label using the Kubernetes metadata
+    - sourceLabels: [__meta_kubernetes_pod_name]
+      action: replace
+      targetLabel: pod
+      
+    # REPLACE: Set the 'service' label using the Kubernetes service name
+    - sourceLabels: [__meta_kubernetes_service_name]
+      action: replace
+      targetLabel: service
