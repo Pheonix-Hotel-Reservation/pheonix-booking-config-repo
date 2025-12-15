@@ -9,6 +9,8 @@ image:
   tag: 4.1.6-management-alpine 
   pullPolicy: IfNotPresent
   
+auth:
+  enabled: false
 # CRITICAL: Inject environment variables to force the desired user creation
 extraEnv:
 - name: RABBITMQ_DEFAULT_USER
