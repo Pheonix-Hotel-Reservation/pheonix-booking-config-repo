@@ -5,6 +5,15 @@ image:
   tag: "v1.0.0"
 
 
+rabbitmq:
+  # This must match the name of the broker's internal Secret
+  secretName: "phoenix-staging-rabbitmq-rabbitmq-broker" 
+  # This must match the key for the password in that Secret
+  passwordKey: "password"
+  # This is the user that exists in the broker's database
+  username: "admin"
+
+
 imagePullSecret:
   # Provide a default name here. It will be overridden, but prevents the crash.
   name: "harbor-pull-secret"
