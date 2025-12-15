@@ -11,12 +11,7 @@ spec:
     matchLabels:
       app: reservation-service # Selects the reservation-service K8s Service
   endpoints:
-  - targetPort: 15020 # Istio proxy metrics port
-    path: /stats/prometheus # Istio proxy Prometheus metrics endpoint
+  - port: http-app # Application port
+    path: /metrics # Application metrics endpoint
     interval: 30s
     scheme: http
-    relabelings:
-      # Only scrape metrics from the istio-proxy container
-      - sourceLabels: [__meta_kubernetes_pod_container_name]
-        action: keep
-        regex: istio-proxy
