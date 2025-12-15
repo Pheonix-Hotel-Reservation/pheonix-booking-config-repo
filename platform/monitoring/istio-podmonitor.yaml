@@ -1,15 +1,20 @@
+# File: platform/monitoring/istio-podmonitor.yaml (FINAL CORRECTED LABELS)
+
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   name: istio-mesh-monitor
-  namespace: monitoring
+  namespace: monitoring 
   labels:
-    release: monitoring-stack-kube-prom
-spec:
+    # 1. This label should be the RELEASE name from your Helm install
+    release: monitoring-stack 
+    # 2. Add the component name label (Crucial for Helm-driven selection)
+    app: kube-prometheus-stack-prometheus 
+    # 3. Keep the corrected namespace selector (already verified as correct)
   namespaceSelector:
     matchNames:
-      - phoenix-staging
-      - phoenix-production
+    - phoenix-staging 
+    - phoenix-production 
   selector:
     matchLabels:
       security.istio.io/tlsMode: istio
