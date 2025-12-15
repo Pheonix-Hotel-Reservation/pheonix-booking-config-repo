@@ -39,6 +39,3 @@ resources:
   limits:
     cpu: 500m
     memory: 1024Mi
-
-userSetupJob:
-  enabled: true
