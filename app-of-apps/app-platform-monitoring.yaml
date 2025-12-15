@@ -24,7 +24,7 @@ spec:
       ref: values
       path: platform/monitoring
       directory:
-        include: '{ingress.yaml,grafana-allow-policy.yaml}'
+        include: '{ingress.yaml,grafana-allow-policy.yaml,istio-podmonitor.yaml}'
 
   destination:
     server: https://kubernetes.default.svc
