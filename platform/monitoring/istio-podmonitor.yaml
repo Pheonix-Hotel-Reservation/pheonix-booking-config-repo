@@ -1,25 +1,26 @@
-# File: platform/monitoring/istio-podmonitor.yaml (FINAL CORRECTION)
-
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   name: istio-mesh-monitor
-  namespace: monitoring 
+  namespace: monitoring
   labels:
     release: monitoring-stack-kube-prom
 spec:
-  # --- ADD THIS BLOCK ---
   namespaceSelector:
     matchNames:
-    - phoenix-staging # Look for pods in the application namespace
-    # If you also want to scrape apps in 'production', add it here
-    - phoenix-production
-  # ----------------------
+      - phoenix-staging
+      - phoenix-production
   selector:
     matchLabels:
-      security.istio.io/tlsMode: istio 
+      security.istio.io/tlsMode: istio
   podMetricsEndpoints:
-  - path: /stats/prometheus
-    port: istio-metrics      
-    interval: 15s
-    # ... rest of relabelings (which are now correct)
+    - path: /stats/prometheus
+      port: 15090          # Envoy admin /stats endpoint (envoy metrics)
+      interval: 15s
+      honorLabels: true
+      scheme: http
+    - path: /stats/prometheus
+      port: 15020          # Istio agent /proxy-agent metrics (agent-level)
+      interval: 15s
+      honorLabels: true
+      scheme: http
