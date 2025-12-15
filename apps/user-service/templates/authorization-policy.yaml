@@ -1,10 +1,8 @@
-# File: user-service-jwt-required.yaml (Updated)
-
 apiVersion: security.istio.io/v1beta1
 kind: AuthorizationPolicy
 metadata:
   name: user-service-jwt-required
-  namespace: {{ .Release.Namespace }} # Assuming this is 'phoenix-staging'
+  namespace: {{ .Release.Namespace }}
 spec:
   selector:
     matchLabels:
@@ -12,22 +10,7 @@ spec:
   action: ALLOW
   rules:
   
-  # --- NEW RULE: ALLOW PROMETHEUS SCRAPING ---
-  - from:
-    - source:
-        # The principal of the Prometheus Service Account
-        # Format: cluster.local/ns/<Prometheus Namespace>/sa/<Prometheus SA Name>
-        principals: ["cluster.local/ns/monitoring/sa/monitoring-stack-kube-prom-prometheus"]
-    to:
-    - operation:
-        # Explicitly whitelist the metrics port used by Istio sidecar
-        ports: ["15020"] 
-        methods: ["GET"]
-    # You could also add common application metrics ports here if scraping app metrics:
-    # ports: ["15020", "9090", "8080"] 
-  # ---------------------------------------------
-  
-  # Rule 2 (Existing rule for Admin-only access)
+  # Rule 2: Admin-only access to GET /api/users/
   - to:
     - operation:
         methods: ["GET"]
@@ -36,13 +19,15 @@ spec:
     - key: request.headers[x-auth-user-groups]
       values: ["WyJhZG1pbiJd"]
   
-  # Rule 3 (Existing rule for Authenticated users)
+  # Rule 3: Authenticated users for specific endpoints
   - to:
     - operation:
         methods: ["GET", "POST", "PUT", "DELETE"]
         paths: 
         - "/api/users/*"
-        # ... other existing paths
+        - "/api/users/profile"
+        - "/api/users/*/loyalty-points"
+        - "/api/users/asgardeo/*"
     when:
     - key: request.headers[x-auth-user-id]
       values: ["*"]
