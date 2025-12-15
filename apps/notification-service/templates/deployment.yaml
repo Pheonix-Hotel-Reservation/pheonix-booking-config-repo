@@ -37,10 +37,23 @@ spec:
         # Define the Secret Path for RabbitMQ
         vault.hashicorp.com/agent-inject-secret-rabbitmq-creds: "kv/data/secret/data/notification-service/rabbitmq"
 
-        # Define the template for RabbitMQ credentials
         vault.hashicorp.com/agent-inject-template-rabbitmq-creds: |
           {{`{{- with secret "kv/data/secret/data/notification-service/rabbitmq" -}}
-          export RABBITMQ_URL="{{ .Data.data.RABBITMQ_URL }}"
+          {{ $username := .Data.data.RABBITMQ_USERNAME }}
+          {{ $password := .Data.data.RABBITMQ_PASSWORD }}
+          
+          # Dynamically retrieve the current namespace (e.g., phoenix-staging)
+          {{ $namespace := env "POD_NAMESPACE" }}
+          
+          # The Service DNS name is constructed dynamically: 
+          # e.g., phoenix-staging-rabbitmq-rabbitmq-broker.messaging.svc.cluster.local:5672
+          # Note: We must explicitly pass POD_NAMESPACE to the Pod's ENV for this to work.
+          {{ $serviceName := printf "%s-rabbitmq-rabbitmq-broker" $namespace }}
+
+          {{ $host := printf "%s.messaging.svc.cluster.local:5672" $serviceName }}
+          
+          # Construct the full AMQP URL
+          export RABBITMQ_URL="amqp://{{ $username }}:{{ $password }}@{{ $host }}"
           export NOTIFICATION_QUEUE="{{ .Data.data.NOTIFICATION_QUEUE }}"
           {{- end }}`}}
 
@@ -84,6 +97,11 @@ spec:
 
         # Environment variables
         env:
+        - name: POD_NAMESPACE
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.namespace
+
         - name: NODE_ENV
           value: {{ .Values.environment | default "staging" | quote }}
 
