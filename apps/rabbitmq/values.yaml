@@ -18,7 +18,7 @@ extraEnv:
   valueFrom:
     secretKeyRef:
       name: rabbitmq # Your existing secret
-      key: rabbitmq-password # The key name holding the password
+      key: rabbitmq-pass # The key name holding the password
 
 # Enable persistence (CRITICAL for production)
 persistence:
