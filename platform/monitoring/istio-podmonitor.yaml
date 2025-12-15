@@ -1,5 +1,3 @@
-# File: platform/monitoring/istio-podmonitor.yaml (Corrected)
-
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
@@ -8,18 +6,21 @@ metadata:
   labels:
     release: monitoring-stack-kube-prom
 spec:
+  namespaceSelector:
+    matchNames:
+      - phoenix-staging
+      - phoenix-production
   selector:
     matchLabels:
       security.istio.io/tlsMode: istio
   podMetricsEndpoints:
-  - # REMOVE: name: istio-proxy  <-- THIS FIELD IS CAUSING THE ERROR
-    path: /stats/prometheus
-    port: istio-metrics      
-    interval: 15s
-    relabelings:
-      - sourceLabels: [__meta_kubernetes_pod_container_name]
-        action: keep
-        regex: istio-proxy
-      - sourceLabels: [__meta_kubernetes_pod_name]
-        action: replace
-        targetLabel: pod_name
+    - path: /stats/prometheus
+      port: "15090"          # Envoy admin /stats endpoint (envoy metrics)
+      interval: 15s
+      honorLabels: true
+      scheme: http
+    - path: /stats/prometheus
+      port: "15020"          # Istio agent /proxy-agent metrics (agent-level)
+      interval: 15s
+      honorLabels: true
+      scheme: http
