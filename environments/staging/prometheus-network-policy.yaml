@@ -15,7 +15,7 @@ spec:
     - from:
       - namespaceSelector:
           matchLabels:
-            name: istio-system
+            name: istio-ingress
     # 2. Allow traffic within the same namespace (for inter-service communication)
     - from:
       - podSelector: {}
