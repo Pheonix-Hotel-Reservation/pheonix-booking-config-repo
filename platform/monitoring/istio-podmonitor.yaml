@@ -1,18 +1,18 @@
-# File: platform/monitoring/istio-podmonitor.yaml
+# File: platform/monitoring/istio-podmonitor.yaml (Corrected)
 
 apiVersion: monitoring.coreos.com/v1
 kind: PodMonitor
 metadata:
   name: istio-mesh-monitor
-  namespace: monitoring # <-- CRITICAL: Must be where your Prometheus is running
+  namespace: monitoring
   labels:
-    release: monitoring-stack-kube-prom # <-- Use the correct label to match your Prometheus Operator setup
+    release: monitoring-stack-kube-prom
 spec:
   selector:
     matchLabels:
-      security.istio.io/tlsMode: istio # Selects all application pods with the sidecar
+      security.istio.io/tlsMode: istio
   podMetricsEndpoints:
-  - name: istio-proxy
+  - # REMOVE: name: istio-proxy  <-- THIS FIELD IS CAUSING THE ERROR
     path: /stats/prometheus
     port: istio-metrics      
     interval: 15s
