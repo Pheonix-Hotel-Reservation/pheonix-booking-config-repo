@@ -3,7 +3,7 @@ kind: ServiceMonitor
 metadata:
   name: rabbitmq
   labels:
-    release: monitoring-stack # Targets your Prometheus instance
+    release: monitoring-stack-kube-prom # Targets your Prometheus instance
 spec:
   selector:
     matchLabels:

@@ -1,0 +1,27 @@
+# File: environments/production/prometheus-network-policy.yaml
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-prometheus-scrape
+  namespace: phoenix-production # CRITICAL: Policy applies to this namespace
+spec:
+  # This selector targets all pods that need to be scraped (all apps in the namespace)
+  podSelector: {}
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+      # 1. Allow traffic from the source namespace (where Prometheus runs)
+      - namespaceSelector:
+          matchLabels:
+            name: monitoring
+      # 2. Restrict the source to the Prometheus pods within that namespace
+      #    (Optional, but better security: use the Prometheus Pod labels if known)
+      # - podSelector:
+      #     matchLabels:
+      #       app.kubernetes.io/name: prometheus
+      ports:
+        # 3. Allow traffic ONLY on the Istio metrics port (15020)
+        - protocol: TCP
+          port: 15020
