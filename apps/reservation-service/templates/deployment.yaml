@@ -76,9 +76,23 @@ spec:
           value: {{ .Values.serviceEndpoints.room | quote }}
         - name: NOTIFICATION_FROM_EMAIL
           value: {{ .Values.notification.fromEmail | quote }}
+        - name: RABBITMQ_USER
+          value: "{{ .Values.rabbitmq.username }}" # Pulls "admin" from values
+
+        - name: RABBITMQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              # Secret Name is templated from the environment-specific values file
+              name: {{ .Values.rabbitmq.secretName }} 
+              # Key Name is templated from the environment-specific values file
+              key: {{ .Values.rabbitmq.passwordKey }} 
+
+        - name: RABBITMQ_HOST
+          value: "{{ .Values.rabbitmq.serviceHost }}.{{ .Release.Namespace }}.svc.cluster.local"
+
+        # The main URL construction
         - name: RABBITMQ_URL
-          # Use a generic value key that will be set in the override file
-          value: "amqp://{{ .Values.rabbitmq.serviceHost }}.{{ .Release.Namespace }}.svc.cluster.local:5672"
+          value: "amqp://$(RABBITMQ_USER):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOST):5672"
 
         # Load environment variables from ConfigMap
         envFrom:
