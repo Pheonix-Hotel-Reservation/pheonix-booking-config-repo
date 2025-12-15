@@ -42,12 +42,11 @@ spec:
           {{ $username := .Data.data.RABBITMQ_USERNAME }}
           {{ $password := .Data.data.RABBITMQ_PASSWORD }}
           
-          # Dynamically retrieve the current namespace (e.g., phoenix-staging)
-          {{ $namespace := env "POD_NAMESPACE" }}
+          # The service namespace is injected via Helm templating
+          {{ $namespace := "`}}{{ .Release.Namespace }}{{`" }} 
           
           # The Service DNS name is constructed dynamically: 
           # e.g., phoenix-staging-rabbitmq-rabbitmq-broker.messaging.svc.cluster.local:5672
-          # Note: We must explicitly pass POD_NAMESPACE to the Pod's ENV for this to work.
           {{ $serviceName := printf "%s-rabbitmq-rabbitmq-broker" $namespace }}
 
           {{ $host := printf "%s.messaging.svc.cluster.local:5672" $serviceName }}
@@ -97,11 +96,6 @@ spec:
 
         # Environment variables
         env:
-        - name: POD_NAMESPACE
-          valueFrom:
-            fieldRef:
-              fieldPath: metadata.namespace
-
         - name: NODE_ENV
           value: {{ .Values.environment | default "staging" | quote }}
 
