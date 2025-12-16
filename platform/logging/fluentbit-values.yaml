@@ -67,6 +67,135 @@ config:
         Labels              On
 
   outputs: |
+    # Per-service indices (logs still also go to the default index below)
+
+    # User Service logs -> index: phoenix-user-service-YYYY.MM.DD
+    [OUTPUT]
+        Name                opensearch
+        Match               kube.*user-service*
+        Host                opensearch-cluster-master.opensearch.svc.cluster.local
+        Port                9200
+        Index               phoenix-user-service-%Y.%m.%d
+        Type                _doc
+        Replace_Dots        On
+        Retry_Limit         3
+        HTTP_User           admin
+        HTTP_passwd         ${OPENSEARCH_PASS}
+        tls                 On
+        tls.verify          Off
+        Suppress_Type_Name  On
+        Time_Key            @timestamp
+        Time_Key_Format     %Y-%m-%dT%H:%M:%S.%L%z
+
+    # Hotel Service logs -> index: phoenix-hotel-service-YYYY.MM.DD
+    [OUTPUT]
+        Name                opensearch
+        Match               kube.*hotel-service*
+        Host                opensearch-cluster-master.opensearch.svc.cluster.local
+        Port                9200
+        Index               phoenix-hotel-service-%Y.%m.%d
+        Type                _doc
+        Replace_Dots        On
+        Retry_Limit         3
+        HTTP_User           admin
+        HTTP_passwd         ${OPENSEARCH_PASS}
+        tls                 On
+        tls.verify          Off
+        Suppress_Type_Name  On
+        Time_Key            @timestamp
+        Time_Key_Format     %Y-%m-%dT%H:%M:%S.%L%z
+
+    # Room Service logs -> index: phoenix-room-service-YYYY.MM.DD
+    [OUTPUT]
+        Name                opensearch
+        Match               kube.*room-service*
+        Host                opensearch-cluster-master.opensearch.svc.cluster.local
+        Port                9200
+        Index               phoenix-room-service-%Y.%m.%d
+        Type                _doc
+        Replace_Dots        On
+        Retry_Limit         3
+        HTTP_User           admin
+        HTTP_passwd         ${OPENSEARCH_PASS}
+        tls                 On
+        tls.verify          Off
+        Suppress_Type_Name  On
+        Time_Key            @timestamp
+        Time_Key_Format     %Y-%m-%dT%H:%M:%S.%L%z
+
+    # Reservation Service logs -> index: phoenix-reservation-service-YYYY.MM.DD
+    [OUTPUT]
+        Name                opensearch
+        Match               kube.*reservation-service*
+        Host                opensearch-cluster-master.opensearch.svc.cluster.local
+        Port                9200
+        Index               phoenix-reservation-service-%Y.%m.%d
+        Type                _doc
+        Replace_Dots        On
+        Retry_Limit         3
+        HTTP_User           admin
+        HTTP_passwd         ${OPENSEARCH_PASS}
+        tls                 On
+        tls.verify          Off
+        Suppress_Type_Name  On
+        Time_Key            @timestamp
+        Time_Key_Format     %Y-%m-%dT%H:%M:%S.%L%z
+
+    # Search Service logs -> index: phoenix-search-service-YYYY.MM.DD
+    [OUTPUT]
+        Name                opensearch
+        Match               kube.*search-service*
+        Host                opensearch-cluster-master.opensearch.svc.cluster.local
+        Port                9200
+        Index               phoenix-search-service-%Y.%m.%d
+        Type                _doc
+        Replace_Dots        On
+        Retry_Limit         3
+        HTTP_User           admin
+        HTTP_passwd         ${OPENSEARCH_PASS}
+        tls                 On
+        tls.verify          Off
+        Suppress_Type_Name  On
+        Time_Key            @timestamp
+        Time_Key_Format     %Y-%m-%dT%H:%M:%S.%L%z
+
+    # Notification Service logs -> index: phoenix-notification-service-YYYY.MM.DD
+    [OUTPUT]
+        Name                opensearch
+        Match               kube.*notification-service*
+        Host                opensearch-cluster-master.opensearch.svc.cluster.local
+        Port                9200
+        Index               phoenix-notification-service-%Y.%m.%d
+        Type                _doc
+        Replace_Dots        On
+        Retry_Limit         3
+        HTTP_User           admin
+        HTTP_passwd         ${OPENSEARCH_PASS}
+        tls                 On
+        tls.verify          Off
+        Suppress_Type_Name  On
+        Time_Key            @timestamp
+        Time_Key_Format     %Y-%m-%dT%H:%M:%S.%L%z
+
+    # Frontend logs -> index: phoenix-frontend-YYYY.MM.DD
+    [OUTPUT]
+        Name                opensearch
+        Match               kube.*frontend*
+        Host                opensearch-cluster-master.opensearch.svc.cluster.local
+        Port                9200
+        Index               phoenix-frontend-%Y.%m.%d
+        Type                _doc
+        Replace_Dots        On
+        Retry_Limit         3
+        HTTP_User           admin
+        HTTP_passwd         ${OPENSEARCH_PASS}
+        tls                 On
+        tls.verify          Off
+        Suppress_Type_Name  On
+        Time_Key            @timestamp
+        Time_Key_Format     %Y-%m-%dT%H:%M:%S.%L%z
+
+    # Fallback index for everything else (and also still receives all logs, including service logs)
     [OUTPUT]
         Name                opensearch
         Match               *
