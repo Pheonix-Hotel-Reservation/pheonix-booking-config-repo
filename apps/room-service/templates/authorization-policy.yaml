@@ -10,7 +10,15 @@ spec:
   action: ALLOW
   rules:
 
-  # Rule: Authenticated users for room endpoints
+  # Rule 1: Service-to-service communication
+  # Allow search-service and reservation-service to call room-service
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/{{ .Release.Namespace }}/sa/search-sa
+        - cluster.local/ns/{{ .Release.Namespace }}/sa/reservation-sa
+
+  # Rule 2: Authenticated users for room endpoints
   - to:
     - operation:
         methods: ["GET", "POST", "PUT", "DELETE"]
