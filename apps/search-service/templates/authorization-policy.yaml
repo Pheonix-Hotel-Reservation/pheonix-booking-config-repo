@@ -10,13 +10,11 @@ spec:
   action: ALLOW
   rules:
 
-  # Rule: Authenticated users for search endpoints
+  # Rule: Allow unauthenticated access to search endpoints
+  # Search endpoints are public and don't require authentication
   - to:
     - operation:
         methods: ["GET", "POST"]
         paths:
         - "/api/search/*"
         - "/api/search"
-    when:
-    - key: request.headers[x-auth-user-id]
-      values: ["*"]
