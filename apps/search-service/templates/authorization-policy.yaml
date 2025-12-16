@@ -10,7 +10,16 @@ spec:
   action: ALLOW
   rules:
 
-  # Rule: Allow unauthenticated access to search endpoints
+  # Rule 1: Allow Prometheus to scrape metrics endpoint
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/monitoring/sa/monitoring-stack-kube-prom-prometheus
+    to:
+    - operation:
+        paths: ["/metrics"]
+
+  # Rule 2: Allow unauthenticated access to search endpoints
   # Search endpoints are public and don't require authentication
   - to:
     - operation:

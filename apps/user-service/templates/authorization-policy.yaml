@@ -10,6 +10,15 @@ spec:
   action: ALLOW
   rules:
   
+  # Rule 1: Allow Prometheus to scrape metrics endpoint
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/monitoring/sa/monitoring-stack-kube-prom-prometheus
+    to:
+    - operation:
+        paths: ["/metrics"]
+  
   # Rule 2: Admin-only access to GET /api/users/
   - to:
     - operation:

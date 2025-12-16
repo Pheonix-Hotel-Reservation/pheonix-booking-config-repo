@@ -10,7 +10,16 @@ spec:
   action: ALLOW
   rules:
 
-  # Rule 1: Service-to-service communication
+  # Rule 1: Allow Prometheus to scrape metrics endpoint
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/monitoring/sa/monitoring-stack-kube-prom-prometheus
+    to:
+    - operation:
+        paths: ["/metrics"]
+
+  # Rule 2: Service-to-service communication
   # Allow search-service and reservation-service to call hotel-service
   - from:
     - source:
@@ -18,7 +27,7 @@ spec:
         - cluster.local/ns/{{ .Release.Namespace }}/sa/search-sa
         - cluster.local/ns/{{ .Release.Namespace }}/sa/reservation-sa
 
-  # Rule 2: Authenticated users for hotel endpoints
+  # Rule 3: Authenticated users for hotel endpoints
   - to:
     - operation:
         methods: ["GET", "POST", "PUT", "DELETE"]

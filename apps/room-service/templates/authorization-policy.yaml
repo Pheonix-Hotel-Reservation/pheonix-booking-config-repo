@@ -10,7 +10,16 @@ spec:
   action: ALLOW
   rules:
 
-  # Rule 1: Service-to-service communication
+  # Rule 1: Allow Prometheus to scrape metrics endpoint
+  - from:
+    - source:
+        principals:
+        - cluster.local/ns/monitoring/sa/monitoring-stack-kube-prom-prometheus
+    to:
+    - operation:
+        paths: ["/metrics"]
+
+  # Rule 2: Service-to-service communication
   # Allow search-service and reservation-service to call room-service
   - from:
     - source:
@@ -18,7 +27,7 @@ spec:
         - cluster.local/ns/{{ .Release.Namespace }}/sa/search-sa
         - cluster.local/ns/{{ .Release.Namespace }}/sa/reservation-sa
 
-  # Rule 2: Allow unauthenticated GET requests to room endpoints
+  # Rule 3: Allow unauthenticated GET requests to room endpoints
   - to:
     - operation:
         methods: ["GET"]
@@ -26,7 +35,7 @@ spec:
         - "/api/rooms/*"
         - "/api/rooms"
 
-  # Rule 3: Require authentication for POST, PUT, DELETE operations
+  # Rule 4: Require authentication for POST, PUT, DELETE operations
   - to:
     - operation:
         methods: ["POST", "PUT", "DELETE"]
