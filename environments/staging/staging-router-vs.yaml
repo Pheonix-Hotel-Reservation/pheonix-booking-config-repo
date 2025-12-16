@@ -57,6 +57,14 @@ spec:
         port:
           number: 3003
 
+  - match:
+    - uri:
+        prefix: /api/search
+    route:
+    - destination:
+        host: search-service.phoenix-staging.svc.cluster.local
+        port:
+          number: 3006
 
   # 3. Catch-all for Root/Static Content
   - match:

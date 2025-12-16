@@ -20,6 +20,15 @@ spec:
         host: user-service.phoenix-production.svc.cluster.local # Internal FQDN
         port:
           number: 3001 # App's internal port
+
+  - match:
+    - uri:
+        prefix: /api/search
+    route:
+    - destination:
+        host: search-service.phoenix-production.svc.cluster.local
+        port:
+          number: 3006
   
   # 3. Catch-all for Root/Static Content
   - match:
