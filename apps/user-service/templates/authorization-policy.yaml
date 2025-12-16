@@ -11,10 +11,10 @@ spec:
   rules:
   
   # Rule 1: Allow Prometheus to scrape metrics endpoint
+  # Allow from monitoring namespace (Prometheus may not have Istio sidecar/principal)
   - from:
     - source:
-        principals:
-        - cluster.local/ns/monitoring/sa/monitoring-stack-kube-prom-prometheus
+        namespaces: ["monitoring"]
     to:
     - operation:
         paths: ["/metrics"]
