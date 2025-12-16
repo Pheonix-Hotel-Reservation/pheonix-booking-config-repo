@@ -1,6 +1,6 @@
 # /environments/staging/room-service.yaml
 image:
-  tag: "@sha256:6e8b2150b0014b63070cf6e9a1166ecd50f2b84e26a628385ff3b2720623f622"
+  tag: "@sha256:c4551f65217c2f1d28916590092e48e7f6e4c8c61178bfa6ceb7a08f7c89c3c2"
 
 imagePullSecret:
   name: harbor-pull-secret
