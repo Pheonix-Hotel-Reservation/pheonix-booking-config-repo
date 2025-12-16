@@ -18,10 +18,18 @@ spec:
         - cluster.local/ns/{{ .Release.Namespace }}/sa/search-sa
         - cluster.local/ns/{{ .Release.Namespace }}/sa/reservation-sa
 
-  # Rule 2: Authenticated users for room endpoints
+  # Rule 2: Allow unauthenticated GET requests to room endpoints
   - to:
     - operation:
-        methods: ["GET", "POST", "PUT", "DELETE"]
+        methods: ["GET"]
+        paths:
+        - "/api/rooms/*"
+        - "/api/rooms"
+
+  # Rule 3: Require authentication for POST, PUT, DELETE operations
+  - to:
+    - operation:
+        methods: ["POST", "PUT", "DELETE"]
         paths:
         - "/api/rooms/*"
         - "/api/rooms"
