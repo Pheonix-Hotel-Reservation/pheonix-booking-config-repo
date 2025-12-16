@@ -66,13 +66,22 @@ config:
         Annotations         Off
         Labels              On
 
+    # Rewrite tags based on service name from Kubernetes labels
+    [FILTER]
+        Name                rewrite_tag
+        Match               kube.*
+        Rule                $kubernetes['labels']['app'] ^(user-service|hotel-service|room-service|reservation-service|search-service|notification-service|frontend)$ service.$1 false
+        Emitter_Name        re_emitted
+        Emitter_Storage.type memory
+        Emitter_Mem_Buf_Limit 10M
+
   outputs: |
     # Per-service indices (logs still also go to the default index below)
 
     # User Service logs -> index: phoenix-user-service-YYYY.MM.DD
     [OUTPUT]
         Name                opensearch
-        Match               kube.*user-service*
+        Match               service.user-service
         Host                opensearch-cluster-master.opensearch.svc.cluster.local
         Port                9200
         Index               phoenix-user-service-%Y.%m.%d
@@ -90,7 +99,7 @@ config:
     # Hotel Service logs -> index: phoenix-hotel-service-YYYY.MM.DD
     [OUTPUT]
         Name                opensearch
-        Match               kube.*hotel-service*
+        Match               service.hotel-service
         Host                opensearch-cluster-master.opensearch.svc.cluster.local
         Port                9200
         Index               phoenix-hotel-service-%Y.%m.%d
@@ -108,7 +117,7 @@ config:
     # Room Service logs -> index: phoenix-room-service-YYYY.MM.DD
     [OUTPUT]
         Name                opensearch
-        Match               kube.*room-service*
+        Match               service.room-service
         Host                opensearch-cluster-master.opensearch.svc.cluster.local
         Port                9200
         Index               phoenix-room-service-%Y.%m.%d
@@ -126,7 +135,7 @@ config:
     # Reservation Service logs -> index: phoenix-reservation-service-YYYY.MM.DD
     [OUTPUT]
         Name                opensearch
-        Match               kube.*reservation-service*
+        Match               service.reservation-service
         Host                opensearch-cluster-master.opensearch.svc.cluster.local
         Port                9200
         Index               phoenix-reservation-service-%Y.%m.%d
@@ -144,7 +153,7 @@ config:
     # Search Service logs -> index: phoenix-search-service-YYYY.MM.DD
     [OUTPUT]
         Name                opensearch
-        Match               kube.*search-service*
+        Match               service.search-service
         Host                opensearch-cluster-master.opensearch.svc.cluster.local
         Port                9200
         Index               phoenix-search-service-%Y.%m.%d
@@ -162,7 +171,7 @@ config:
     # Notification Service logs -> index: phoenix-notification-service-YYYY.MM.DD
     [OUTPUT]
         Name                opensearch
-        Match               kube.*notification-service*
+        Match               service.notification-service
         Host                opensearch-cluster-master.opensearch.svc.cluster.local
         Port                9200
         Index               phoenix-notification-service-%Y.%m.%d
@@ -180,7 +189,7 @@ config:
     # Frontend logs -> index: phoenix-frontend-YYYY.MM.DD
     [OUTPUT]
         Name                opensearch
-        Match               kube.*frontend*
+        Match               service.frontend
         Host                opensearch-cluster-master.opensearch.svc.cluster.local
         Port                9200
         Index               phoenix-frontend-%Y.%m.%d
