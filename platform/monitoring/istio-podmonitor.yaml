@@ -25,8 +25,8 @@ spec:
   # 3. Scrape Endpoint Configuration
   podMetricsEndpoints:
   - path: /stats/prometheus
-    # Use the name of the port exposed by the Istio proxy (usually 15020)
-    port: istio-metrics      
+    # Scrape the Istio sidecar's Envoy metrics port (15090, named http-envoy-prom)
+    port: http-envoy-prom
     interval: 15s
     scheme: http # Use http for simplicity; upgrade to https if strict mTLS is enforced.
 
