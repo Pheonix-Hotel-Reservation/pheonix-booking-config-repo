@@ -1,6 +1,6 @@
 # /environments/staging/hotel-service.yaml
 image:
-  tag: "@sha256:0c8ccc8b20abd944bde4f3ec37ce338475b36e81f22eb91e778b82a958890804"
+  tag: "@sha256:150130976972a2a9013bc7d448dda81f284a0b9e9938eb5024e5663c56572b8d"
 
 imagePullSecret:
   name: harbor-pull-secret
