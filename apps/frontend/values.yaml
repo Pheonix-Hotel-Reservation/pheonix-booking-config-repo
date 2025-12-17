@@ -1,5 +1,5 @@
 image:
-  repository: registry.pheonix.live/phoenix-staging/frontend
+  repository: registry.phoenix-project.online/phoenix-staging/frontend
   tag: "v1.0.0"
 
 replicaCount: 2

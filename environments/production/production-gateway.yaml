@@ -12,7 +12,7 @@ spec:
       name: http-prod
       protocol: HTTP
     hosts:
-      - "prod.pheonix.live" # Include root/simplified production host
+      - "prod.phoenix-project.online" # Include root/simplified production host
     tls:
       httpsRedirect: true
   - port:
@@ -20,7 +20,7 @@ spec:
       name: https-prod
       protocol: HTTPS
     hosts:
-      - "prod.pheonix.live" # Wildcard cert is required here
+      - "prod.phoenix-project.online" # Wildcard cert is required here
     tls:
       mode: SIMPLE
-      credentialName: pheonix-live-tls # Uses your existing wildcard certificate
+      credentialName: phoenix-project-online-tls # Uses your existing wildcard certificate

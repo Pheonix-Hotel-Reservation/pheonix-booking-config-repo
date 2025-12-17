@@ -24,7 +24,7 @@ spec:
       name: https
       protocol: HTTPS
     hosts:
-    - "*.pheonix.live"
+    - "*.phoenix-project.online"
     tls:
       mode: SIMPLE
-      credentialName: pheonix-live-tls  # Uses your new wildcard cert
+      credentialName: phoenix-project-online-tls  # Uses your new wildcard cert

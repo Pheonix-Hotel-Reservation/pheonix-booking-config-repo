@@ -25,11 +25,18 @@ server:
       cpu: "250m"
       memory: "512Mi"
   
+  # Security context for proper volume permissions
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 100
+    runAsGroup: 1000
+    fsGroup: 1000
+  
   # 1. STORAGE
   dataStorage:
     enabled: true
     size: 10Gi
-    storageClass: "do-block-storage-retain"
+    storageClass: "gp3"  # AWS EBS gp3 storage class (ensure this exists in your cluster)
     accessMode: ReadWriteOnce
   
   # 2. SECRETS MAPPING
@@ -50,7 +57,7 @@ server:
   # 3. HIGH AVAILABILITY
   ha:
     enabled: true
-    replicas: 2 
+    replicas: 3  # Fixed: Changed to 3 to match retry_join entries
     raft:
       enabled: true
       setNodeId: true

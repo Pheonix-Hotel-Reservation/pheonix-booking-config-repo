@@ -1,7 +1,7 @@
 # Defines default variables used in the template files
 
 image:
-  repository: registry.pheonix.live/phoenix-staging/room-service # Uses your new registry
+  repository: registry.phoenix-project.online/phoenix-staging/room-service # Uses your new registry
   tag: "v1.0.0"
 
 

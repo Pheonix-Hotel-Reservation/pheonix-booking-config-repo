@@ -5,7 +5,7 @@ metadata:
   namespace: phoenix-staging # Deploy in the application namespace
 spec:
   hosts:
-    - "pheonix-staging.pheonix.live"
+    - "staging.phoenix-project.online"
   gateways:
     - istio-ingress/staging-gateway # Binds to the new dedicated staging gateway
   http:

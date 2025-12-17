@@ -1,5 +1,5 @@
 service:
-  # This triggers DigitalOcean to provision a Public IP
+  # This triggers AWS to provision a LoadBalancer
   type: LoadBalancer 
   ports:
   - name: status-port

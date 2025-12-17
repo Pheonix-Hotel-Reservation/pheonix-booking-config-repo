@@ -1,14 +1,14 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: pheonix-live-cert
+  name: phoenix-project-online-cert
   namespace: istio-ingress  # Must be where the Gateway lives
 spec:
-  secretName: pheonix-live-tls
+  secretName: phoenix-project-online-tls
   issuerRef:
     name: letsencrypt
     kind: ClusterIssuer
-  commonName: "*.pheonix.live"
+  commonName: "*.phoenix-project.online"
   dnsNames:
-    - "pheonix.live"
-    - "*.pheonix.live"
+    - "phoenix-project.online"
+    - "*.phoenix-project.online"

@@ -5,7 +5,7 @@ metadata:
   namespace: phoenix-production # Deploy in the application namespace
 spec:
   hosts:
-    - "prod.pheonix.live"
+    - "prod.phoenix-project.online"
   gateways:
     - istio-ingress/production-gateway # Binds to the new dedicated production gateway
   http:

@@ -5,7 +5,7 @@ metadata:
   # Namespace is determined by the ApplicationSet deployment (e.g., phoenix-staging)
 spec:
   hosts:
-    - "rabbitmq.{{ .Release.Namespace }}.pheonix.live" # e.g., rabbitmq.phoenix-staging.pheonix.live
+    - "rabbitmq.{{ .Release.Namespace }}.phoenix-project.online" # e.g., rabbitmq.phoenix-staging.phoenix-project.online
   gateways:
     - istio-ingress/staging-gateway
   http:

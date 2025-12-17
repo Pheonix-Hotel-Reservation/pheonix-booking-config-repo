@@ -9,7 +9,7 @@ grafana:
   persistence:
     enabled: true
     type: statefulset
-    storageClassName: "do-block-storage-retain"
+    storageClassName: "gp3"  # AWS EBS gp3 storage class
     size: 10Gi
 
   defaultConfig:
@@ -26,7 +26,7 @@ prometheus:
     storageSpec:
       volumeClaimTemplate:
         spec:
-          storageClassName: "do-block-storage-retain"
+          storageClassName: "gp3"  # AWS EBS gp3 storage class
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:
@@ -46,7 +46,7 @@ alertmanager:
     storage:
       volumeClaimTemplate:
         spec:
-          storageClassName: "do-block-storage-retain"
+          storageClassName: "gp3"  # AWS EBS gp3 storage class
           accessModes: ["ReadWriteOnce"]
           resources:
             requests:

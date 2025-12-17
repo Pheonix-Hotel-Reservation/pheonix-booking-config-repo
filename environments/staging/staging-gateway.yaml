@@ -12,8 +12,8 @@ spec:
       name: http-staging
       protocol: HTTP
     hosts:
-      - "*.phoenix-staging.pheonix.live"
-      - "pheonix-staging.pheonix.live"
+      - "*.staging.phoenix-project.online"
+      - "staging.phoenix-project.online"
     tls:
       httpsRedirect: true # Redirect all HTTP to HTTPS
   - port:
@@ -21,8 +21,8 @@ spec:
       name: https-staging
       protocol: HTTPS
     hosts:
-      - "*.phoenix-staging.pheonix.live"
-      - "pheonix-staging.pheonix.live"
+      - "*.staging.phoenix-project.online"
+      - "staging.phoenix-project.online"
     tls:
       mode: SIMPLE
-      credentialName: pheonix-live-tls # Uses your existing wildcard certificate
+      credentialName: phoenix-project-online-tls # Uses your existing wildcard certificate

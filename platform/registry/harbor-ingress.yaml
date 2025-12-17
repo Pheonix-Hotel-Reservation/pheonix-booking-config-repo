@@ -5,7 +5,7 @@ metadata:
   namespace: harbor 
 spec:
   hosts:
-    - "registry.pheonix.live" 
+    - "registry.phoenix-project.online" 
   gateways:
     - istio-ingress/main-gateway
   http:

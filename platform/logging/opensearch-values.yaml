@@ -2,7 +2,7 @@ clusterName: opensearch-cluster
 
 persistence:
   enabled: true
-  storageClass: "do-block-storage-retain" # DigitalOcean storage class
+  storageClass: "gp3"  # AWS EBS gp3 storage class
   size: 10Gi 
   
 resources:

@@ -10,20 +10,20 @@ expose:
   loadBalancer:
     name: harbor
 
-externalURL: https://registry.pheonix.live
+externalURL: https://registry.phoenix-project.online
 
 harborAdminPassword: "Harbor@12345"
 
 persistence:
   enabled: true
   imageChartStorage:
-    storageClass: "do-block-storage"  # Changed to match existing PVCs
+    storageClass: "gp3"  # AWS EBS gp3 storage class
     size: 5Gi
 
 database:
   internal:
     persistence:
-      storageClass: "do-block-storage"  # Changed to match existing PVCs
+      storageClass: "gp3"  # AWS EBS gp3 storage class
       size: 2Gi
 
 redis:

@@ -9,6 +9,6 @@ imagePullSecret:
 
 env:
   # Environment-specific URLs
-  VITE_ASGARDEO_SIGN_IN_REDIRECT_URL: "https://prod.pheonix.live/login"
-  VITE_API_GATEWAY_URL: "https://prod.pheonix.live/api"
+  VITE_ASGARDEO_SIGN_IN_REDIRECT_URL: "https://prod.phoenix-project.online/login"
+  VITE_API_GATEWAY_URL: "https://prod.phoenix-project.online/api"
   # ...

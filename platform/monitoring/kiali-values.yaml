@@ -19,7 +19,7 @@ auth:
 
 # 3. Kiali Server Configuration
 server:
-  web_fqdn: kiali.pheonix.live
+  web_fqdn: kiali.phoenix-project.online
   web_port: 20001
   identity_service:
     address: 'https://kubernetes.default.svc:443'

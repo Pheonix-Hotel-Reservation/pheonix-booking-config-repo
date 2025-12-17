@@ -5,7 +5,7 @@ metadata:
   namespace: vault
 spec:
   hosts:
-  - vault.pheonix.live
+  - vault.phoenix-project.online
   gateways:
   - istio-ingress/main-gateway
   http:

@@ -5,7 +5,7 @@ metadata:
   namespace: monitoring
 spec:
   hosts:
-  - grafana.pheonix.live
+  - grafana.phoenix-project.online
   gateways:
   - istio-ingress/main-gateway
   http:
