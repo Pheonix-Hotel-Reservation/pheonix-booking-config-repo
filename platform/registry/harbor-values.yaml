@@ -9,6 +9,11 @@ expose:
       notarySecretName: "harbor-registry-tls"
   loadBalancer:
     name: harbor
+    annotations:
+      # Use AWS Load Balancer Controller instead of Cloud Controller Manager
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+      service.beta.kubernetes.io/aws-load-balancer-nlb-target-type: "ip"
 
 externalURL: https://registry.phoenix-project.online
 
