@@ -20,6 +20,42 @@ spec:
         host: user-service.phoenix-production.svc.cluster.local # Internal FQDN
         port:
           number: 3001 # App's internal port
+          
+  - match:
+    - uri:
+        prefix: /api/header-test
+    route:
+    - destination:
+        host: phoenix-production-header-echo.phoenix-production.svc.cluster.local
+        port:
+          number: 3000
+  
+  - match:
+    - uri:
+        prefix: /api/hotels
+    route:
+    - destination:
+        host: hotel-service.phoenix-production.svc.cluster.local
+        port:
+          number: 3002
+
+  - match:
+    - uri:
+        prefix: /api/rooms
+    route:
+    - destination:
+        host: room-service.phoenix-production.svc.cluster.local
+        port:
+          number: 3003
+
+  - match:
+    - uri:
+        prefix: /api/reservations
+    route:
+    - destination:
+        host: reservation-service.phoenix-production.svc.cluster.local
+        port:
+          number: 3004
 
   - match:
     - uri:
@@ -29,7 +65,7 @@ spec:
         host: search-service.phoenix-production.svc.cluster.local
         port:
           number: 3006
-  
+
   # 3. Catch-all for Root/Static Content
   - match:
     - uri:
