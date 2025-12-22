@@ -10,6 +10,12 @@ controller:
 daemonset:
   enabled: true
   # Remove hostNetwork - not needed and creates security risks
+  env:
+    - name: OPENSEARCH_PASS
+      valueFrom:
+        secretKeyRef:
+          name: opensearch-admin-secret
+          key: password
   
 service:
   type: ClusterIP
