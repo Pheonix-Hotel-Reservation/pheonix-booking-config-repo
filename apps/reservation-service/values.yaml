@@ -9,7 +9,7 @@ rabbitmq:
   # This must match the name of the broker's internal Secret
   secretName: "rabbitmq" 
   # This must match the key for the password in that Secret
-  passwordKey: "rabbitmq-password"
+  passwordKey: "Fl@menco17"
   # This is the user that exists in the broker's database
   username: "user"
 
