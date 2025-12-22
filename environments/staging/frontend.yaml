@@ -1,6 +1,6 @@
 
 image:
-  tag: "@sha256:46a4947aceb8fc6188a9a4e06ba3a6f5b9f97ab491e382d46532807eb5dd1a73"
+  tag: "@sha256:26941185125aa43ad6e400fec4e6deefd19a135b1aa04c2ce8380657aac877d3"
 
 # Configuration for the frontend application
 replicaCount: 1 
