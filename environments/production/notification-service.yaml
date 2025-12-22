@@ -1,6 +1,6 @@
 # /environments/staging/notification-service.yaml
 image:
-  tag: "@sha256:854cdb2355da7bf19028ff58056cd7d24d562bf35872247c72877ef2f4b6ad8b"
+  tag: "@sha256:32cfc34e6d3a1962501b8e393dc8dc25dbc179058761ebbe5dbe61899f8d0f0f"
 
 imagePullSecret:
   name: harbor-pull-secret
